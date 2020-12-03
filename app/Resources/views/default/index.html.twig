@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+{% set show_nav = false %} 
+{% block content %} 
+
+    {{ parent() }}
+    
+<!-- Jumbotron -->
+<div class="jumbotron text-center mt-5">
+
+  <!-- Title -->
+  <h2 class="card-title h2">Sistema de gestion Integral</h2>
+  <!-- Subtitle -->
+  <p class="blue-text my-4 font-weight-bold">Bienvenido {{ app.user }} a su portal de inicio </p>
+
+  <!-- Grid row -->
+  <div class="row d-flex justify-content-center">
+
+    <!-- Grid column -->
+    <div class="col-xl-7 pb-2">
+
+      <p class="card-text">Desde aqui podra acceder a todas sus aplicaciones</p>
+
+    </div>
+    <!-- Grid column -->
+
+  </div>
+  <!-- Grid row -->
+
+  <hr class="my-4">
+
+  <div class="pt-2 row">
+    <button type="button" class="col btn btn-blue waves-effect btn-block">Sistema ROUTE <br><i class="fas fa-road fa-2x"></i></button>
+    <button type="button" class="col btn btn-blue  waves-effect btn-block">Sistema PAX Tracker <br><i class="fas fa-ticket-alt fa-2x"></i></button>
+    <button type="button" class="col btn btn-blue  waves-effect btn-block">Sistema Gestion Trafico <br><i class="fas fa-bus fa-2x"></i></button>
+  </div>
+
+</div>
+<!-- Jumbotron -->
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}

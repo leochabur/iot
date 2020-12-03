@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="h2 mt-5">Nueva Empresa</div>
+
+    {{ form_start(form, {'attr' : {'novalidate' : 'novalidate'}}) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+{% endblock %}
