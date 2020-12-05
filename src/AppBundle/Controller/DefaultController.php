@@ -45,7 +45,7 @@ class DefaultController extends Controller
         }
 
         return $this->render(
-            'usuario/registro.html.twig',
+            '@App/usuario/registro.html.twig',
             ['form' => $form->createView()]
         );
     }
@@ -72,7 +72,7 @@ class DefaultController extends Controller
         }
 
         return $this->render(
-            'empresa/registro.html.twig',
+            '@App/empresa/registro.html.twig',
             ['form' => $form->createView()]
         );
     }

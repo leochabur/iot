@@ -1,0 +1,66 @@
+{% extends '@App/base.html.twig' %}
+
+{% block content %}
+    <div class="h3 mt-5 mb-3">{{ label }} Cliente</div>
+    {% include '@Gestion/messages.html.twig' %}
+    {{ form_start(form, {'attr' : {'novalidate' : 'novalidate', 'class' : 'border border-light'}}) }}
+	    <div class='form-row ml-4 mr-2 mt-2'>	 
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.razonSocial) }}
+			    {{ form_widget(form.razonSocial, { 'attr' : {'class' : 'form-control text-uppercase'}}) }}
+			    {{ form_errors(form.razonSocial) }}
+			</div>	    
+	    	<div class=' col-lg-2 col-sm-12'>
+			    {{ form_label(form.cuit) }}
+			    {{ form_widget(form.cuit, { 'attr' : {'class' : 'form-control cuit'}}) }}
+			    {{ form_errors(form.cuit) }}
+			</div>
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.domicilioFiscal) }}
+			    {{ form_widget(form.domicilioFiscal, { 'attr' : {'class' : 'form-control text-uppercase'}}) }}
+			    {{ form_errors(form.domicilioFiscal) }}
+			</div>
+		</div>
+	    <div class='form-row ml-4 mr-2 mt-2'>	 
+	    	<div class=' col-lg-6 col-sm-12'>
+			    {{ form_label(form.contacto) }}
+			    {{ form_widget(form.contacto, { 'attr' : {'class' : 'form-control text-uppercase'}}) }}
+			    {{ form_errors(form.contacto) }}
+			</div>
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.telefono) }}
+			    {{ form_widget(form.telefono, { 'attr' : {'class' : 'form-control text-uppercase'}}) }}
+			    {{ form_errors(form.telefono) }}
+			</div>	    
+
+		</div>
+		{% if form.activo is defined %}
+	    <div class='form-row ml-4 mr-2 mt-2'>	 
+	    	<div class=' col-lg-2 col-sm-12'>
+			    {{ form_label(form.activo) }}
+			    {{ form_widget(form.activo, { 'attr' : {'class' : 'form-control form-control-sm'}}) }}
+			</div>
+		</div>
+		{% endif %}
+		<div class='form-row ml-4 mr-2 mt-2'>
+			{{ form_widget(form.guardar, { 'attr' : {'class' : 'btn btn-default'}}) }}
+		</div>
+    
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+
+<script type="text/javascript">
+
+	$(document).ready(function(){
+		$( ".cuit" ).inputmask({
+								mask: '99-99999999-9',
+								placeholder: '99-99999999-9',
+								showMaskOnHover: true,
+								showMaskOnFocus: true
+							  });
+	});
+</script>
+{% endblock %}
+

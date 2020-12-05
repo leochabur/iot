@@ -1,0 +1,39 @@
+{% extends '@App/base.html.twig' %}
+
+{% block content %}
+    <div class="h3 mt-5 mb-2">Listado de clientes</div>
+    <hr>
+	<table class="table table-hover table-bordered table-striped table-sm">
+	  <thead>
+	    <tr>
+	      <th scope="col">#</th>
+	      <th scope="col">Razon Social</th>
+	      <th scope="col">CUIT</th>
+	      <th scope="col">Telefono</th>
+	      <th scope="col">Contacto</th>
+	      <th scope="col"></th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	  	{% for c in clientes %}
+	  		<tr>
+	  			<td>{{ loop.index }}</td>
+	  			<td>{{ c.razonSocial|upper }}</td>
+	  			<td>{{ c.cuit }}</td>
+	  			<td>{{ c.telefono|upper }}</td>
+	  			<td>{{ c.contacto|upper }}</td>
+	  			<td class="text-center"><a href="{{ path('editar_cliente', { id : c.id }) }}" class="btn btn-sm btn-default">Editar</a></td>
+	  		</tr>
+	  	{% endfor %}
+	  </tbody>
+	</table>
+
+{% endblock %}
+
+{% block javascripts %}
+
+<script type="text/javascript">
+
+</script>
+{% endblock %}
+

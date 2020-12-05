@@ -108,7 +108,7 @@ class UserAuthenticator extends AbstractGuardAuthenticator
         }
         catch(\Exception $e){
             throw new CustomUserMessageAuthenticationException(
-                                                                'No se pudo recuperar el usuario '. $company.' '.$e->getMessage()
+                                                                'No se pudo recuperar el usuario '
                                                                 );    
         }
     }

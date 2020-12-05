@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="h3 mt-5 mb-2">Listado de servicios</div>
+    {% include '@Gestion/messages.html.twig'  %}
+    <hr>
+    {{ form_start(form, {'attr' : {'novalidate' : 'novalidate'}}) }} 
+	    <div class='form-row mr-2 mt-2'>	 
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.clientes) }}
+			    {{ form_widget(form.clientes, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			</div> 
+			<div class=' col-lg-4 col-sm-12 mt-4'>
+				{{ form_widget(form.cargar, { 'attr' : {'class' : 'btn btn-sm btn-default'}}) }}
+			</div>
+		</div>
+    {{ form_end(form) }}
+    <hr>
+    {% if servicios is defined %}
+			<table class="table table-hover table-bordered table-striped table-sm">
+			  <thead>
+			    <tr>
+			      <th scope="col">Servicio</th>
+			      <th scope="col">Origen</th>
+			      <th scope="col">Destino</th>
+			      <th scope="col">Estado</th>
+			      <th scope="col"></th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			  	{% for s in servicios %}
+			  		<tr>
+			  			<td>{{ s.nombre|upper }}</td>
+			  			<td>{{ s.origen|upper }}</td>
+			  			<td>{{ s.destino|upper }}</td>
+			  			<td>
+			  				{% if s.activo %}
+			  					ACTIVO
+			  				{% else %}
+			  					INACTIVO
+			  				{% endif %}
+			  			</td>
+			  			<td class="text-center">
+			  					<a href="{{ path('editar_servicio', {id : s.id}) }}" class="btn btn-sm btn-default">Editar</a>
+			  					<a href="{{ path('alta_turnos', {id : s.id}) }}" class="btn btn-sm btn-default">Turnos</a>
+			  			</td>
+			  		</tr>
+			  	{% endfor %}
+			  </tbody>
+			</table>
+	{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+
+<script type="text/javascript">
+
+</script>
+{% endblock %}
+

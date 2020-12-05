@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <p class="text-uppercase text-muted h5 mt-2">Cliente: {{ servicio.cliente }}</p>
+    <p class="text-uppercase text-muted h5 mt-2">Servicio: {{ servicio }}</p>
+    {% include '@Gestion/messages.html.twig'  %}
+    {% if edit is not defined %}
+		    <span class="h4 mb-2">Listado turnos generados</span>
+		    {% if servicio is defined %}
+					<table class="table table-hover table-bordered table-striped table-sm">
+					  <thead>
+					    <tr>
+					      <th scope="col">Turno</th>
+					      <th scope="col">Inicio</th>
+					      <th scope="col">Fin</th>
+					      <th scope="col">Estado</th>
+					      <th scope="col"></th>
+					    </tr>
+					  </thead>
+					  <tbody>
+					  	{% for t in servicio.turnos %}
+					  		<tr>
+					  			<td>{{ t.turnoCliente }}</td>
+					  			<td>{{ t.horaInicial|date('H:i') }}</td>
+					  			<td>{{ t.horaFinal|date('H:i') }}</td>
+					  			<td>
+					  				{% if t.activo %}
+					  					ACTIVO
+					  				{% else %}
+					  					INACTIVO
+					  				{% endif %}
+					  			</td>
+					  			<td class="text-center">
+					  				<a href="{{ path('editar_turno', {tno : t.id}) }}" class="btn btn-sm">Editar</a>
+					  			</td>
+					  		</tr>
+					  	{% endfor %}
+					  </tbody>
+					</table>
+			{% endif %}
+{% endif %}
+			<br>
+			<hr>
+<span class="h4 mb-2 mt-4">{{ label }}</span>
+    {{ form_start(form, {'attr' : {'novalidate' : 'novalidate', 'class' : 'border border-light'}}) }}
+    	<div class='form-row ml-2 mt-2 h5 text-muted'>
+    		General
+    	</div>	 
+	    <div class='form-row ml-4 mr-2 mt-2'>	 
+	    	<div class=' col-lg-6 col-sm-12'>
+			    {{ form_label(form.servicio) }}
+			    {{ form_widget(form.servicio, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    {{ form_errors(form.servicio) }}
+			</div>
+	    	<div class=' col-lg-6 col-sm-12'>
+			    {{ form_label(form.turnoCliente) }}
+			    {{ form_widget(form.turnoCliente, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    {{ form_errors(form.turnoCliente) }}
+			</div>
+		</div>
+	    <div class='form-row ml-4 mr-2 mt-2'>	 
+	    	<div class=' col-lg-3 col-sm-12'>
+			    {{ form_label(form.horaInicial) }}
+			    {{ form_widget(form.horaInicial, { 'attr' : {'class' : 'form-control form-control-sm'}}) }}
+			    <div class="text-danger">{{ form_errors(form.horaInicial) }}</div>
+			</div>
+	    	<div class=' col-lg-3 col-sm-12'>
+			    {{ form_label(form.horaFinal) }}
+			    {{ form_widget(form.horaFinal, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    <div class="text-danger">{{ form_errors(form.horaFinal) }}</div>
+			</div>
+	    	<div class=' col-lg-3 col-sm-12'>
+			    {{ form_label(form.duracion) }}
+			    {{ form_widget(form.duracion, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    <div class="text-danger">{{ form_errors(form.duracion) }}</div>
+			</div>	
+	    	<div class=' col-lg-3 col-sm-12'>
+			    {{ form_label(form.kmRecorrido) }}
+			    {{ form_widget(form.kmRecorrido, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    <div class="text-danger">{{ form_errors(form.kmRecorrido) }}</div>
+			</div>	
+
+		</div>
+
+
+    	<div class='form-row ml-2 mt-4 h5 text-muted'>
+    		Restricciones
+    	</div>
+	    <div class='form-row ml-4 mr-2 mt-2'>	   
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.antiguedad) }}
+			    {{ form_widget(form.antiguedad, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    {{ form_errors(form.antiguedad) }}
+			</div>
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.requiereBanio) }}
+			    {{ form_widget(form.requiereBanio, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    {{ form_errors(form.requiereBanio) }}
+			</div>
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.numeroPaxSolicitado, 'Pax Solicitados') }}
+			    {{ form_widget(form.numeroPaxSolicitado, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    <div class="text-danger">{{ form_errors(form.numeroPaxSolicitado) }}</div>
+			</div>
+		</div>
+	    <div class='form-row ml-4 mr-2 mt-2'>	   
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.frecuencias, 'Frecuencia Semanal') }}
+			    {{ form_widget(form.frecuencias, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    {{ form_errors(form.frecuencias) }}
+			</div>
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.tipoUnidadesSolicitadas, 'Tipos Unidad Solicitada') }}
+			    {{ form_widget(form.tipoUnidadesSolicitadas, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    {{ form_errors(form.tipoUnidadesSolicitadas) }}
+			</div>
+		</div>
+		<div class='form-row ml-4 mr-2 mt-2 align-right'>
+			{{ form_widget(form.guardar, { 'attr' : {'class' : 'btn btn-success'}}) }}
+		</div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+
+<script type="text/javascript">
+
+
+</script>
+{% endblock %}
+

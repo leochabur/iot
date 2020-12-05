@@ -26,7 +26,7 @@ class UsuariosController extends Controller
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('default/login.html.twig', [
+        return $this->render('@App/default/login.html.twig', [
             'last_username' => $lastUsername,
             'error'         => $error,
         ]);
@@ -39,6 +39,6 @@ class UsuariosController extends Controller
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        return $this->render('default/index.html.twig');
+        return $this->render('@App/default/index.html.twig');
     }
 }
