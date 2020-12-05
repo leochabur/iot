@@ -10,4 +10,29 @@ namespace GestionBundle\Repository\trafico;
  */
 class ServicioRepository extends \Doctrine\ORM\EntityRepository
 {
+	public function getServiciosEmpresa(\AppBundle\Entity\Empresa $empresa) 
+	{ 
+			return $this->createQueryBuilder('s')
+						->join('s.cliente', 'c')
+						->where('s.empresa = :empresa')
+						->setParameter('empresa', $empresa)
+						->orderBy('c.razonSocial')
+						->addOrderBy('s.nombre')
+						->getQuery()
+						->getResult();
+	} 
+
+	public function getServiciosOfClienteEmpresa(\AppBundle\Entity\Empresa $empresa, \GestionBundle\Entity\ventas\Cliente $cliente) 
+	{ 
+			return $this->createQueryBuilder('s')
+						->join('s.cliente', 'c')
+						->where('s.empresa = :empresa')
+						->andWhere('c = :cliente')
+						->setParameter('empresa', $empresa)
+						->setParameter('cliente', $cliente)
+						->orderBy('c.razonSocial')
+						->addOrderBy('s.nombre')
+						->getQuery()
+						->getResult();
+	} 
 }

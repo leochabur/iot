@@ -1,15 +1,12 @@
-{% extends 'base.html.twig' %}
+{% extends '@App/base.html.twig' %}
 
 {% block content %}
-    <div class="h3 mt-5 mb-3">{{ label }}</div>
+    <div class="h3 mt-5 mb-3">{{ label }} Servicio</div>
     <hr>
     {% include '@Gestion/messages.html.twig'  %}
     {{ form_start(form, {'attr' : {'novalidate' : 'novalidate', 'class' : 'border border-light'}}) }}
-    	<div class='form-row ml-2 mt-2 h4 text-muted'>
-    		General
-    	</div>	 
 	    <div class='form-row ml-4 mr-2 mt-2'>	 
-	    	<div class=' col-lg-4 col-sm-12'>sdsfs fss 
+	    	<div class=' col-lg-4 col-sm-12'>
 			    {{ form_label(form.cliente) }}
 			    {{ form_widget(form.cliente, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
 			    {{ form_errors(form.cliente) }}
@@ -19,10 +16,10 @@
 			    {{ form_widget(form.nombre, { 'attr' : {'class' : 'form-control text-uppercase form-control-sm'}}) }}
 			    <div class="text-danger">{{ form_errors(form.nombre) }}</div>
 			</div>
-	    	<div class=' col-lg-4 col-sm-12'>
-			    {{ form_label(form.estructura) }}
-			    {{ form_widget(form.estructura, { 'attr' : {'class' : 'form-control text-uppercase form-control-sm'}}) }}
-			    <div class="text-danger">{{ form_errors(form.estructura) }}</div>
+	    	<div class=' col-lg-2 col-sm-12'>
+			    {{ form_label(form.kmRecorrido) }}
+			    {{ form_widget(form.kmRecorrido, { 'attr' : {'class' : 'form-control text-uppercase form-control-sm'}}) }}
+			    <div class="text-danger">{{ form_errors(form.kmRecorrido) }}</div>
 			</div>
 		</div>
 	    <div class='form-row ml-4 mr-2 mt-2'>	 
@@ -32,101 +29,21 @@
 			    <div class="text-danger">{{ form_errors(form.sentido) }}</div>
 			</div>
 	    	<div class=' col-lg-4 col-sm-12'>
-			    {{ form_label(form.frecuencia) }}
-			    {{ form_widget(form.frecuencia, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
-			    <div class="text-danger">{{ form_errors(form.frecuencia) }}</div>
-			</div>
-	    	<div class=' col-lg-4 col-sm-12'>
 			    {{ form_label(form.tipoServicio) }}
 			    {{ form_widget(form.tipoServicio, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
 			    <div class="text-danger">{{ form_errors(form.tipoServicio) }}</div>
 			</div>			
 		</div>
-    	<div class='form-row ml-2 mt-4 h4 text-muted'>
-    		Origen
-    	</div>	
 	    <div class='form-row ml-4 mr-2 mt-2'>	    
 	    	<div class=' col-lg-4 col-sm-12'>
 			    {{ form_label(form.origen) }}
 			    {{ form_widget(form.origen, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
 			    <div class="text-danger">{{ form_errors(form.origen) }}</div>
-			</div>
-	    	<div class=' col-lg-4 col-sm-12'>
-			    {{ form_label(form.latitudOrigen) }}
-			    {{ form_widget(form.latitudOrigen, { 'attr' : {'class' : 'form-control form-control-sm'}}) }}
-			    <div class="text-danger">{{ form_errors(form.latitudOrigen) }}</div>
-			</div>
-	    	<div class=' col-lg-4 col-sm-12'>
-			    {{ form_label(form.longitudOrigen) }}
-			    {{ form_widget(form.longitudOrigen, { 'attr' : {'class' : 'form-control form-control-sm'}}) }}
-			    <div class="text-danger">{{ form_errors(form.longitudOrigen) }}</div>
-			</div>
-		</div>
-    	<div class='form-row ml-2 mt-4 h4 text-muted'>
-    		Destino
-    	</div>	
-	    <div class='form-row ml-4 mr-2 mt-2'>	    
+			</div>    
 	    	<div class=' col-lg-4 col-sm-12'>
 			    {{ form_label(form.destino) }}
 			    {{ form_widget(form.destino, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
 			    <div class="text-danger">{{ form_errors(form.destino) }}</div>
-			</div>
-	    	<div class=' col-lg-4 col-sm-12'>
-			    {{ form_label(form.latitudDestino) }}
-			    {{ form_widget(form.latitudDestino, { 'attr' : {'class' : 'form-control form-control-sm'}}) }}
-			    <div class="text-danger">{{ form_errors(form.latitudDestino) }}</div>
-			</div>
-	    	<div class=' col-lg-4 col-sm-12'>
-			    {{ form_label(form.longitudDestino) }}
-			    {{ form_widget(form.longitudDestino, { 'attr' : {'class' : 'form-control form-control-sm'}}) }}
-			    <div class="text-danger">{{ form_errors(form.longitudDestino) }}</div>
-			</div>
-		</div>
-    	<div class='form-row ml-2 mt-4 h4 text-muted'>
-    		Restricciones
-    	</div>
-	    <div class='form-row ml-4 mr-2 mt-2'>	   
-	    	<div class=' col-lg-4 col-sm-12'>
-			    {{ form_label(form.tipoHabilitacion) }}
-			    {{ form_widget(form.tipoHabilitacion, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
-			    {{ form_errors(form.tipoHabilitacion) }}
-			</div>
-	    	<div class=' col-lg-4 col-sm-12'>
-			    {{ form_label(form.admiteFletero) }}
-			    {{ form_widget(form.admiteFletero, { 'attr' : {'class' : 'form-control form-control-sm'}}) }}
-			    {{ form_errors(form.admiteFletero) }}
-			</div> 
-	    	<div class=' col-lg-4 col-sm-12'>
-			    {{ form_label(form.requiereUnidadHabilitada) }}
-			    {{ form_widget(form.requiereUnidadHabilitada, { 'attr' : {'class' : 'form-control form-control-sm'}}) }}
-			    {{ form_errors(form.requiereUnidadHabilitada) }}
-			</div> 
-		</div>
-	    <div class='form-row ml-4 mr-2 mt-4'>	   
-	    	<div class=' col-lg-4 col-sm-12'>
-			    {{ form_label(form.tiposUnidadPermitidos) }}
-			    {{ form_widget(form.tiposUnidadPermitidos, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
-			    {{ form_errors(form.tiposUnidadPermitidos) }}
-			</div>
-	    	<div class=' col-lg-4 col-sm-12'>
-			    {{ form_label(form.tiposMotorPermitidos) }}
-			    {{ form_widget(form.tiposMotorPermitidos, { 'attr' : {'class' : 'form-control form-control-sm'}}) }}
-			    {{ form_errors(form.tiposMotorPermitidos) }}
-			</div> 
-	    	<div class=' col-lg-4 col-sm-12'>
-			    {{ form_label(form.tiposSuspensionPermitidos) }}
-			    {{ form_widget(form.tiposSuspensionPermitidos, { 'attr' : {'class' : 'form-control form-control-sm'}}) }}
-			    {{ form_errors(form.tiposSuspensionPermitidos) }}
-			</div> 
-		</div>
-    	<div class='form-row ml-2 mt-4 h4 text-muted'>
-    		GEO Cerca
-    	</div>
-	    <div class='form-row ml-4 mr-2 mt-4'>	   
-	    	<div class=' col-lg-4 col-sm-12'>
-			    {{ form_label(form.cierreAutomatico) }}
-			    {{ form_widget(form.cierreAutomatico, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
-			    {{ form_errors(form.cierreAutomatico) }}
 			</div>
 		</div>
 		<div class='form-row ml-4 mr-2 mt-2 align-right'>

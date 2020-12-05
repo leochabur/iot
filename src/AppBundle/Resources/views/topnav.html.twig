@@ -35,7 +35,11 @@
               <a class="nav-link dropdown-toggle active btn" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Servicios
               </a>
+
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <li><a class="dropdown-item" href="{{ path('agregar_servicio') }}">Nuevo Servicio</a></li>
+                  <li><a class="dropdown-item" href="{{ path('listado_servicios') }}">Listado Servicios</a></li>
+
                   <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Opciones</a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                           <li><a class="dropdown-item dropdown-toggle" href="#">Ciudades</a>
@@ -54,6 +58,7 @@
                   </li>
 
               </ul>
+
             </li>
           
         {% endif %}

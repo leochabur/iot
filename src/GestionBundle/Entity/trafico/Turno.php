@@ -33,16 +33,8 @@ class Turno
      * @ORM\JoinColumn(name="id_turno", referencedColumnName="id")
      * @Assert\NotNull(message="El campo no puede permanecer en blanco")
      */
-    private $turnoCliente;
+    private $turno;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="GestionBundle\Entity\trafico\opciones\FrecuenciaTurno")
-     * @ORM\JoinTable(name="trafico_frecuencia_turnos",
-     *      joinColumns={@ORM\JoinColumn(name="id_turno", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="id_frecuencia", referencedColumnName="id")}
-     *      )
-     */
-    private $frecuencias;
 
     /**
      * @var \DateTime
@@ -53,35 +45,20 @@ class Turno
     private $horaInicial;
 
     /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="horaFinal", type="time")
-     * @Assert\NotNull(message="El campo no puede permanecer en blanco")
-     */
-    private $horaFinal;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="kmRecorrido", type="integer")
-     * @Assert\NotNull(message="El campo no puede permanecer en blanco")
-     */
-    private $kmRecorrido;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="duracion", type="time")
      * @Assert\NotNull(message="El campo no puede permanecer en blanco")
      */
     private $duracion;
+
     /**
-     * Constructor
+     * @var bool
+     *
+     * @ORM\Column(name="activo", type="boolean", options={"default": true})
      */
-    public function __construct()
-    {
-        $this->frecuencias = new \Doctrine\Common\Collections\ArrayCollection();
-    }
+    private $activo = true;
+
 
     /**
      * Get id
@@ -115,54 +92,6 @@ class Turno
     public function getHoraInicial()
     {
         return $this->horaInicial;
-    }
-
-    /**
-     * Set horaFinal
-     *
-     * @param \DateTime $horaFinal
-     *
-     * @return Turno
-     */
-    public function setHoraFinal($horaFinal)
-    {
-        $this->horaFinal = $horaFinal;
-
-        return $this;
-    }
-
-    /**
-     * Get horaFinal
-     *
-     * @return \DateTime
-     */
-    public function getHoraFinal()
-    {
-        return $this->horaFinal;
-    }
-
-    /**
-     * Set kmRecorrido
-     *
-     * @param integer $kmRecorrido
-     *
-     * @return Turno
-     */
-    public function setKmRecorrido($kmRecorrido)
-    {
-        $this->kmRecorrido = $kmRecorrido;
-
-        return $this;
-    }
-
-    /**
-     * Get kmRecorrido
-     *
-     * @return integer
-     */
-    public function getKmRecorrido()
-    {
-        return $this->kmRecorrido;
     }
 
     /**
@@ -214,60 +143,50 @@ class Turno
     }
 
     /**
-     * Set turnoCliente
+     * Set turno
      *
-     * @param \GestionBundle\Entity\trafico\opciones\TurnoCliente $turnoCliente
+     * @param \GestionBundle\Entity\trafico\opciones\TurnoCliente $turno
      *
      * @return Turno
      */
-    public function setTurnoCliente(\GestionBundle\Entity\trafico\opciones\TurnoCliente $turnoCliente = null)
+    public function setTurno(\GestionBundle\Entity\trafico\opciones\TurnoCliente $turno = null)
     {
-        $this->turnoCliente = $turnoCliente;
+        $this->turno = $turno;
 
         return $this;
     }
 
     /**
-     * Get turnoCliente
+     * Get turno
      *
      * @return \GestionBundle\Entity\trafico\opciones\TurnoCliente
      */
-    public function getTurnoCliente()
+    public function getTurno()
     {
-        return $this->turnoCliente;
+        return $this->turno;
     }
 
     /**
-     * Add frecuencia
+     * Set activo
      *
-     * @param \GestionBundle\Entity\trafico\opciones\FrecuenciaTurno $frecuencia
+     * @param boolean $activo
      *
      * @return Turno
      */
-    public function addFrecuencia(\GestionBundle\Entity\trafico\opciones\FrecuenciaTurno $frecuencia)
+    public function setActivo($activo)
     {
-        $this->frecuencias[] = $frecuencia;
+        $this->activo = $activo;
 
         return $this;
     }
 
     /**
-     * Remove frecuencia
+     * Get activo
      *
-     * @param \GestionBundle\Entity\trafico\opciones\FrecuenciaTurno $frecuencia
+     * @return boolean
      */
-    public function removeFrecuencia(\GestionBundle\Entity\trafico\opciones\FrecuenciaTurno $frecuencia)
+    public function getActivo()
     {
-        $this->frecuencias->removeElement($frecuencia);
-    }
-
-    /**
-     * Get frecuencias
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFrecuencias()
-    {
-        return $this->frecuencias;
+        return $this->activo;
     }
 }

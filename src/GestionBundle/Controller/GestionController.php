@@ -9,6 +9,15 @@ use GestionBundle\Entity\ventas\Ciudad;
 use GestionBundle\Form\ventas\ClienteType;
 use GestionBundle\Entity\ventas\Cliente;
 use Symfony\Component\HttpFoundation\Request;
+use GestionBundle\Form\trafico\ServicioType;
+use GestionBundle\Entity\trafico\Servicio;
+use GestionBundle\Form\trafico\opciones\TurnoClienteType;
+use GestionBundle\Entity\trafico\opciones\TurnoCliente;
+use GestionBundle\Form\trafico\TurnoType;
+use GestionBundle\Entity\trafico\Turno;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class GestionController extends Controller
 {
@@ -166,11 +175,166 @@ class GestionController extends Controller
 			$em->flush();
             $this->addFlash(
                                 'success',
-                                'El cliente ha sido modificada exitosamente!'
+                                'El cliente ha sido modificado exitosamente!'
                             );
 			return $this->redirectToRoute('listado_clientes');
 		}
         return $this->render('@Gestion/ventas/altaCliente.html.twig', ['label' => 'Modificar', 'form' => $form->createView()]);
+    }
+
+    /////////////////////////Generacion de Servicios
+    /**
+     * @Route("/opciones/addsrvce", name="agregar_servicio", methods={"POST", "GET"})
+     */
+    public function nuevoServicioAction(Request $request)
+    {
+        $servicio = new Servicio();
+        $servicio->setEmpresa($this->getUser()->getEmpresa());
+        $form = $this->getFormAltaServicio($servicio, '');
+        if ($request->isMethod('POST')) 
+        {
+            $em = $this->getDoctrine()->getManager();
+            $form->handleRequest($request);         
+            if ($form->isValid())
+            {               
+                $em->persist($servicio);
+                $em->flush();
+                return $this->redirectToRoute('agregar_horarios', ['id' => $servicio->getId()]);
+            }
+        }
+
+        return $this->render('@Gestion/trafico/altaServicio.html.twig', ['label' => 'Nuevo', 'form' => $form->createView()]);
+    }
+
+    private function getFormAltaServicio($servicio, $route)
+    {
+        return $this->createForm(ServicioType::class, $servicio, ['empresa' => $this->getUser()->getEmpresa(), 'action' => $route]);
+    }
+
+    /**
+     * @Route("/opciones/listserv", name="listado_servicios", methods={"POST", "GET"})
+     */
+    public function listaServiciosAction(Request $request)
+    {
+        $form = $this->getFormSelectClientes($this->getUser()->getEmpresa());
+        if ($request->isMethod('POST'))
+        {
+            $em = $this->getDoctrine()->getManager();
+            $repository = $em->getRepository(Servicio::class);
+
+            $form->handleRequest($request);
+            $data = $form->getData();
+            if (!$data['cliente'])
+            {
+                $servicios = $repository->getServiciosEmpresa($this->getUser()->getEmpresa());
+            }
+            else
+            {
+                $servicios = $repository->getServiciosOfClienteEmpresa($this->getUser()->getEmpresa(), $data['cliente']);
+            }
+            return $this->render('@Gestion/trafico/listadoServicios.html.twig', ['servicios' => $servicios, 'form' => $form->createView()]);
+        }
+
+        return $this->render('@Gestion/trafico/listadoServicios.html.twig', ['form' => $form->createView()]);
+    }
+
+
+    private function getFormSelectClientes($empresa)
+    {
+        $form =    $this->createFormBuilder()
+                        ->add('cliente',
+                          EntityType::class, 
+                          [
+                          'class' => 'GestionBundle:ventas\Cliente',
+                          'query_builder' => function (EntityRepository $er) use ($empresa){
+                                                                                            return $er->createQueryBuilder('c')
+                                                                                                      ->where('c.empresa = :empresa')
+                                                                                                      ->andWhere('c.activo = :activo')
+                                                                                                      ->setParameter('empresa', $empresa)
+                                                                                                      ->setParameter('activo', true)
+                                                                                                      ->orderBy('c.razonSocial', 'ASC');
+                           },
+                           'empty_data' => null,
+                           'required' => false,
+                           'placeholder' => 'TODOS'
+                          ]
+                        )
+                        ->add('cargar', SubmitType::class, ['label' => 'Cargar']) 
+                        ->setMethod('POST')     
+                        ->getForm();
+        return $form;
+    }
+
+    ////////////Agregar Horarios al Servicio
+    /**
+     * @Route("/opciones/addtime/{id}", name="agregar_horarios", methods={"POST", "GET"})
+     */
+    public function nuevoHorarioAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $servicio = $em->find(Servicio::class, $id);
+        $turno = new Turno();
+        $turno->setServicio($servicio);
+
+        $form = $this->getFormAltaTurno($turno, $servicio, '');
+        if ($request->isMethod('POST')) 
+        {
+            $em = $this->getDoctrine()->getManager();
+            $form->handleRequest($request);         
+            if ($form->isValid())
+            {               
+                $em->persist($turno);
+                $em->flush();
+                $this->addFlash(
+                                    'success',
+                                    'El turno ha sido almacenado exitosamente!'
+                                );
+                return $this->redirectToRoute('agregar_horarios', ['id' => $id]);
+            }
+        }
+
+        return $this->render('@Gestion/trafico/altaTurno.html.twig', ['srv' => $servicio, 'label' => 'Nuevo', 'form' => $form->createView()]);
+    }
+
+    private function getFormAltaTurno(Turno $turno, Servicio $servicio, $route)
+    {
+        return $this->createForm(TurnoType::class, $turno, ['servicio' => $servicio, 'empresa' => $this->getUser()->getEmpresa(), 'action' => $route]);
+    }
+
+    /**
+     * @Route("/opciones/edittime/{id}", name="editar_horarios")
+     */
+    public function editarHorarioAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $turno = $em->find(Turno::class, $id);
+        $servicio = $turno->getServicio();
+        $url = $this->generateUrl('editar_horarios_procesar', ['id' => $id]);
+        $form = $this->getFormAltaTurno($turno, $servicio, $url);
+        return $this->render('@Gestion/trafico/altaTurno.html.twig', ['edit' => true, 'srv' => $servicio, 'label' => 'Modificar', 'form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/opciones/edittimeprc/{id}", name="editar_horarios_procesar")
+     */
+    public function procesarEditarHorarioAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $turno = $em->find(Turno::class, $id);
+        $servicio = $turno->getServicio();
+        $url = $this->generateUrl('editar_horarios_procesar', ['id' => $id]);
+        $form = $this->getFormAltaTurno($turno, $servicio, $url);
+        $form->handleRequest($request);
+        if ($form->isValid()) 
+        {
+            $em->flush();
+            $this->addFlash(
+                                'success',
+                                'El turno ha sido modificado exitosamente!'
+                            );
+            return $this->redirectToRoute('agregar_horarios',['id' => $servicio->getId()]);
+        }
+        return $this->render('@Gestion/trafico/altaTurno.html.twig', ['edit' => true, 'srv' => $servicio, 'label' => 'Modificar', 'form' => $form->createView()]);
     }
 
 }

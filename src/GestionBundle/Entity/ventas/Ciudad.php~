@@ -3,13 +3,19 @@
 namespace GestionBundle\Entity\ventas;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * Ciudad
  *
  * @ORM\Table(name="ventas_ciudad")
  * @ORM\Entity(repositoryClass="GestionBundle\Repository\ventas\CiudadRepository")
+ * @UniqueEntity(
+ *     fields={"nombre", "empresa"},
+ *     errorPath="nombre",
+ *     message="Ciudad existente en la Base de Datos"
+ * )
  */
 class Ciudad
 {
@@ -105,5 +111,29 @@ class Ciudad
     public function getProvincia()
     {
         return $this->provincia;
+    }
+
+    /**
+     * Set empresa
+     *
+     * @param \AppBundle\Entity\Empresa $empresa
+     *
+     * @return Ciudad
+     */
+    public function setEmpresa(\AppBundle\Entity\Empresa $empresa = null)
+    {
+        $this->empresa = $empresa;
+
+        return $this;
+    }
+
+    /**
+     * Get empresa
+     *
+     * @return \AppBundle\Entity\Empresa
+     */
+    public function getEmpresa()
+    {
+        return $this->empresa;
     }
 }

@@ -11,7 +11,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\Table(name="ventas_clientes")
  * @ORM\Entity(repositoryClass="GestionBundle\Repository\ventas\ClienteRepository")
- * @UniqueEntity("prefijo", message="Prefijo existente")
  * @UniqueEntity(
  *     fields={"cuit", "empresa"},
  *     errorPath="cuit",
@@ -49,21 +48,21 @@ class Cliente
      * @var string
      *
      * @ORM\Column(name="cuit", type="string", length=13, unique=true)
-     * @Assert\NotNull(message="El campo no puede permanecer en blanco")
+     * @Assert\NotNull(message="Valor invalido")
      */
     private $cuit;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="telefono", type="string")
+     * @ORM\Column(name="telefono", type="string", nullable=true)
      */
     private $telefono;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="contacto", type="string")
+     * @ORM\Column(name="contacto", type="string", nullable=true)
      */
     private $contacto;
 
@@ -78,6 +77,11 @@ class Cliente
      */
     private $activo = true;
 
+
+    public function __toString()
+    {
+        return strtoupper($this->razonSocial);
+    }
 
     /**
      * Get id
@@ -207,5 +211,53 @@ class Cliente
     public function getEmpresa()
     {
         return $this->empresa;
+    }
+
+    /**
+     * Set telefono
+     *
+     * @param string $telefono
+     *
+     * @return Cliente
+     */
+    public function setTelefono($telefono)
+    {
+        $this->telefono = $telefono;
+
+        return $this;
+    }
+
+    /**
+     * Get telefono
+     *
+     * @return string
+     */
+    public function getTelefono()
+    {
+        return $this->telefono;
+    }
+
+    /**
+     * Set contacto
+     *
+     * @param string $contacto
+     *
+     * @return Cliente
+     */
+    public function setContacto($contacto)
+    {
+        $this->contacto = $contacto;
+
+        return $this;
+    }
+
+    /**
+     * Get contacto
+     *
+     * @return string
+     */
+    public function getContacto()
+    {
+        return $this->contacto;
     }
 }

@@ -28,6 +28,12 @@ class TurnoCliente
      */
     private $turno;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Empresa")
+     * @ORM\JoinColumn(name="id_empresa", referencedColumnName="id")
+     */
+    private $empresa;
+
     public function __toString()
     {
         return strtoupper($this->turno);
@@ -65,5 +71,29 @@ class TurnoCliente
     public function getTurno()
     {
         return $this->turno;
+    }
+
+    /**
+     * Set empresa
+     *
+     * @param \AppBundle\Entity\Empresa $empresa
+     *
+     * @return TurnoCliente
+     */
+    public function setEmpresa(\AppBundle\Entity\Empresa $empresa = null)
+    {
+        $this->empresa = $empresa;
+
+        return $this;
+    }
+
+    /**
+     * Get empresa
+     *
+     * @return \AppBundle\Entity\Empresa
+     */
+    public function getEmpresa()
+    {
+        return $this->empresa;
     }
 }

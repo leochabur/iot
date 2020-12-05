@@ -4,6 +4,7 @@ namespace GestionBundle\Entity\trafico;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Servicio
@@ -74,10 +75,24 @@ class Servicio
 
     /**
      * @ORM\OneToMany(targetEntity="Turno", mappedBy="servicio")
+     * @ORM\OrderBy({"horaInicial" = "ASC"})
      */
     private $turnos;
 
-
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Empresa")
+     * @ORM\JoinColumn(name="id_empresa", referencedColumnName="id")
+     */
+    private $empresa;
+    
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="kmRecorrido", type="integer")
+     * @Assert\NotNull(message="El campo no puede permanecer en blanco")
+     */
+    private $kmRecorrido;
+    
     public function __toString()
     {
         return strtoupper($this->nombre);
@@ -301,5 +316,53 @@ class Servicio
     public function getTurnos()
     {
         return $this->turnos;
+    }
+
+    /**
+     * Set empresa
+     *
+     * @param \AppBundle\Entity\Empresa $empresa
+     *
+     * @return Servicio
+     */
+    public function setEmpresa(\AppBundle\Entity\Empresa $empresa = null)
+    {
+        $this->empresa = $empresa;
+
+        return $this;
+    }
+
+    /**
+     * Get empresa
+     *
+     * @return \AppBundle\Entity\Empresa
+     */
+    public function getEmpresa()
+    {
+        return $this->empresa;
+    }
+
+    /**
+     * Set kmRecorrido
+     *
+     * @param integer $kmRecorrido
+     *
+     * @return Servicio
+     */
+    public function setKmRecorrido($kmRecorrido)
+    {
+        $this->kmRecorrido = $kmRecorrido;
+
+        return $this;
+    }
+
+    /**
+     * Get kmRecorrido
+     *
+     * @return integer
+     */
+    public function getKmRecorrido()
+    {
+        return $this->kmRecorrido;
     }
 }

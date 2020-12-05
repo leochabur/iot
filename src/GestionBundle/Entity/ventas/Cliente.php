@@ -78,6 +78,11 @@ class Cliente
     private $activo = true;
 
 
+    public function __toString()
+    {
+        return strtoupper($this->razonSocial);
+    }
+
     /**
      * Get id
      *
