@@ -20,6 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use GestionBundle\Form\segVial\UnidadType;
 use GestionBundle\Entity\segVial\Unidad;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class GestionController extends Controller
 {
@@ -506,5 +507,65 @@ class GestionController extends Controller
     private function getFormAltaUnidad($unidad, $route)
     {
         return $this->createForm(UnidadType::class, $unidad, ['action' => $route]);
+    }
+
+    /**
+     * @Route("/opciones/listunits", name="listado_unidades")
+     */
+    public function listaUnidadesAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $unidades = $em->getRepository(Unidad::class)->getUnidadesEmpresa($this->getUser()->getEmpresa());
+        return $this->render('@Gestion/segVial/listadoUnidades.html.twig', ['unidades' => $unidades]);
+    }
+
+    /**
+     * @Route("/opciones/editunit/{id}", name="editar_unidad")
+     * @ParamConverter("interno", class="GestionBundle:segVial\Unidad")
+     */
+    public function editarUnidadAction(Unidad $interno)
+    {
+        if ($interno->getEmpresa() !== $this->getUser()->getEmpresa())
+        {
+            $this->addFlash(
+                                'error',
+                                'No posee permisos para acceder a esta URL!'
+                            );
+            return $this->redirectToRoute('home_page');
+        }
+        $url = $this->generateUrl('procesar_editar_unidad', ['id' => $interno->getId()]);
+        $form = $this->getFormAltaUnidad($interno, $url);
+        return $this->render('@Gestion/segVial/altaUnidad.html.twig', ['label' => 'Modificar', 'form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/opciones/editunitprc/{id}", name="procesar_editar_unidad", methods={"POST"})
+     * @ParamConverter("interno", class="GestionBundle:segVial\Unidad")
+     */
+    public function procesarEditarUnidadAction(Unidad $interno, Request $request)
+    {
+        if ($interno->getEmpresa() !== $this->getUser()->getEmpresa())
+        {
+            $this->addFlash(
+                                'error',
+                                'No posee permisos para acceder a esta URL!'
+                            );
+            return $this->redirectToRoute('home_page');
+        }
+
+        $url = $this->generateUrl('procesar_editar_unidad', ['id' => $interno->getId()]);
+        $form = $this->getFormAltaUnidad($interno, $url);
+        $form->handleRequest($request);
+        if ($form->isValid())
+        {
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+            $this->addFlash(
+                                'success',
+                                'La unidad ha sido modificada exitosamente!'
+                            );
+            return $this->redirectToRoute('listado_unidades');
+        }
+        return $this->render('@Gestion/segVial/altaUnidad.html.twig', ['label' => 'Modificar', 'form' => $form->createView()]);
     }
 }

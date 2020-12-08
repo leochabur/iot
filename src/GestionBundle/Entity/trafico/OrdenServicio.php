@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="trafico_orden_servicio")
  * @ORM\Entity(repositoryClass="GestionBundle\Repository\trafico\OrdenServicioRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class OrdenServicio
 {
@@ -216,5 +217,21 @@ class OrdenServicio
     public function getUnidad()
     {
         return $this->unidad;
+    }
+
+    /**
+     * @Assert\IsTrue(message="La hora de salida no puede ser posterior a la hora de llegada del servicio!")
+     */
+    public function isHorariosValidos()
+    {
+        return $this->salida < $this->llegada;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setFechaServicio()
+    {
+        $this->fecha = $this->salida;
     }
 }
