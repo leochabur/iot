@@ -1,0 +1,27 @@
+{% extends '@App/base.html.twig' %}
+
+{% block content %}
+    <div class="h3 mt-5 mb-5">{{ label }} Turno</div>
+    {% include '@Gestion/messages.html.twig' %}
+    {{ form_start(form, {'attr' : {'novalidate' : 'novalidate', 'class' : 'border border-light'}}) }} 
+	    <div class='form-row ml-4 mr-2 mt-2'>	 
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.turno) }}
+			    {{ form_widget(form.turno, { 'attr' : {'class' : 'form-control text-uppercase'}}) }}
+			    {{ form_errors(form.turno) }}
+			</div>   
+		</div>
+		<div class='form-row ml-4 mr-2 mt-2'>
+			{{ form_widget(form.guardar, { 'attr' : {'class' : 'btn btn-default'}}) }}
+		</div>
+    
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+
+<script type="text/javascript">
+
+</script>
+{% endblock %}
+

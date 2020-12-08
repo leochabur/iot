@@ -43,8 +43,8 @@
 			  				{% endif %}
 			  			</td>
 			  			<td class="text-center">
-			  					<a href="" class="btn btn-sm btn-default">Editar</a>
-			  					<a href="" class="btn btn-sm btn-default">Hoarios</a>
+			  					<a href="{{ path('editar_servicio', { id : s.id }) }}" class="btn btn-sm btn-default">Editar</a>
+			  					<a href="{{ path('agregar_horarios', { id : s.id }) }}" class="btn btn-sm btn-default">Horarios</a>
 			  			</td>
 			  		</tr>
 			  	{% endfor %}

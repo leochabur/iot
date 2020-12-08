@@ -1,0 +1,78 @@
+{% extends '@App/base.html.twig' %}
+
+{% block content %}
+
+		<div class="h5 mt-5 mb-3">{{ label }} Unidad</div>
+
+    <hr>
+    {% include '@Gestion/messages.html.twig'  %}
+    {{ form_start(form, {'attr' : {'novalidate' : 'novalidate', 'class' : 'border border-light'}}) }}
+	    <div class='form-row ml-4 mr-2 mt-2'>	 
+	    	<div class=' col-lg-3 col-sm-12'>
+			    {{ form_label(form.interno) }}
+			    {{ form_widget(form.interno, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    {{ form_errors(form.interno) }}
+			</div>
+	    	<div class=' col-lg-3 col-sm-12'>
+			    {{ form_label(form.dominio) }}
+			    {{ form_widget(form.dominio, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    {{ form_errors(form.dominio) }}
+			</div>
+	    	<div class=' col-lg-3 col-sm-12'>
+			    {{ form_label(form.anioModelo) }}
+			    {{ form_widget(form.anioModelo, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    {{ form_errors(form.anioModelo) }}
+			</div>
+	    	<div class=' col-lg-3 col-sm-12'>
+			    {{ form_label(form.capacidad) }}
+			    {{ form_widget(form.capacidad, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    {{ form_errors(form.capacidad) }}
+			</div>
+		</div>
+	    <div class='form-row ml-4 mr-2 mt-2'>	 
+	    	<div class=' col-lg-6 col-sm-12'>
+			    {{ form_label(form.chasisMarca) }}
+			    {{ form_widget(form.chasisMarca, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    {{ form_errors(form.chasisMarca) }}
+			</div>
+	    	<div class=' col-lg-6 col-sm-12'>
+			    {{ form_label(form.chasisModelo) }}
+			    {{ form_widget(form.chasisModelo, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    <div class="text-danger">{{ form_errors(form.chasisModelo) }}</div>
+			</div>
+		</div>
+	    <div class='form-row ml-4 mr-2 mt-2'>	 
+	    	<div class=' col-lg-6 col-sm-12'>
+			    {{ form_label(form.carroceriaMarca) }}
+			    {{ form_widget(form.carroceriaMarca, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    {{ form_errors(form.carroceriaMarca) }}
+			</div>
+	    	<div class=' col-lg-6 col-sm-12'>
+			    {{ form_label(form.carroceriaModelo) }}
+			    {{ form_widget(form.carroceriaModelo, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    <div class="text-danger">{{ form_errors(form.carroceriaModelo) }}</div>
+			</div>
+		</div>
+		{% if form.activo is defined %}
+		    <div class='form-row ml-4 mr-2 mt-2'>	 
+		    	<div class=''>
+				    {{ form_label(form.activo) }}
+				    {{ form_widget(form.activo) }}
+				</div>
+			</div>
+		{% endif %}
+		<div class='form-row ml-4 mr-2 mt-2 align-right'>
+			{{ form_widget(form.guardar, { 'attr' : {'class' : 'btn btn-sm btn-default'}}) }}
+		</div>
+    {{ form_end(form) }}
+
+{% endblock %}
+
+{% block javascripts %}
+
+<script type="text/javascript">
+
+
+</script>
+{% endblock %}
+

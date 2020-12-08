@@ -1,0 +1,62 @@
+{% extends '@App/base.html.twig' %}
+
+{% block content %}
+
+	<div class="h5 mt-5 mb-3">Diagramar Servicio</div>
+
+    <hr>
+    {% include '@Gestion/messages.html.twig'  %}
+    {{ form_start(form, {'attr' : {'novalidate' : 'novalidate', 'class' : 'border border-light'}}) }}
+	    <div class='form-row ml-4 mr-2 mt-2'>	 
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.fecha) }}
+			    {{ form_widget(form.fecha, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    {{ form_errors(form.fecha) }}
+			</div>
+	    	<div class=' col-lg-8 col-sm-12'>
+			    {{ form_label(form.turno) }}
+			    {{ form_widget(form.turno, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    <div class="text-danger">{{ form_errors(form.turno) }}</div>
+			</div>
+		</div>
+		<div class='form-row ml-4 mr-2 mt-2 align-right'>
+			{{ form_widget(form.diagramar, { 'attr' : {'class' : 'btn btn-sm btn-default'}}) }}
+		</div>
+    {{ form_end(form) }}
+
+    {% if ordenes is defined %}
+	    <div class="h5 mt-5 mb-3">Servicios diagramados para el : {{ fecha|date('d/m/Y') }}</div>
+		<table class="table table-hover table-bordered table-striped table-sm mt-2">
+		  <thead>
+		    <tr>
+		      <th scope="col">#</th>
+		      <th scope="col">Cliente</th>
+		      <th scope="col">Servicio</th>
+		      <th scope="col">Hora Salida</th>
+		      <th scope="col">Hora Llegada</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		  	{% for o in ordenes %}
+		  		<tr>
+		  			<td>{{ loop.index }}</td>
+		  			<td>{{ o.turno.servicio.cliente|upper }}</td>
+		  			<td>{{ o.turno.servicio|upper }}</td>
+		  			<td>{{ o.salida|date('d/m/Y - H:i') }}</td>
+		  			<td>{{ o.llegada|date('d/m/Y - H:i') }}</td>
+		  		</tr>
+		  	{% endfor %}
+		  </tbody>
+		</table>
+		<a class="btn btn-sm btn-default" href="{{ path('listado_servicios') }}">Volver</a>
+	{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+
+<script type="text/javascript">
+
+
+</script>
+{% endblock %}
+

@@ -4,6 +4,7 @@ parameters:
     #parameter_name: value
 
 services:
+
     weird_authenticator:
         class: AppBundle\Security\UserAuthenticator
         arguments: ['@doctrine.orm.entity_manager', '@router']
@@ -32,6 +33,10 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
+    app.diagrama:
+        class: GestionBundle\Services\Diagrama
+        arguments: ["null"]
+        public: true
     # add more services, or override services that need manual wiring
     # AppBundle\Service\ExampleService:
     #     arguments:

@@ -60,6 +60,11 @@ class Turno
     private $activo = true;
 
 
+    public function getVistaDiagrama()
+    {
+        return $this->servicio->getCliente().' - '.$this->servicio->getNombre().' -> '.$this->horaInicial->format('H:i');
+    }
+
     /**
      * Get id
      *

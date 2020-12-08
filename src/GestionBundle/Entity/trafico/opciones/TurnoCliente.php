@@ -3,12 +3,17 @@
 namespace GestionBundle\Entity\trafico\opciones;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * TurnoCliente
  *
  * @ORM\Table(name="trafico_opciones_turno_cliente")
  * @ORM\Entity(repositoryClass="GestionBundle\Repository\trafico\opciones\TurnoClienteRepository")
+ * @UniqueEntity(
+ *     fields={"turno", "empresa"},
+ *     errorPath="turno",
+ *     message="Turno existente en la Base de Datos"
+ * )
  */
 class TurnoCliente
 {
@@ -24,7 +29,7 @@ class TurnoCliente
     /**
      * @var string
      *
-     * @ORM\Column(name="turno", type="string", length=255, unique=true)
+     * @ORM\Column(name="turno", type="string", length=255)
      */
     private $turno;
 

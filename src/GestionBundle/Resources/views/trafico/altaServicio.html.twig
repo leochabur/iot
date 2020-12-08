@@ -46,6 +46,14 @@
 			    <div class="text-danger">{{ form_errors(form.destino) }}</div>
 			</div>
 		</div>
+		{% if form.activo is defined %}
+		    <div class='form-row ml-4 mr-2 mt-2'>	    
+		    	<div class=' col-lg-4 col-sm-12'>
+				    {{ form_label(form.activo) }}
+				    {{ form_widget(form.activo) }}
+				</div>    
+			</div>
+		{% endif %}
 		<div class='form-row ml-4 mr-2 mt-2 align-right'>
 			{{ form_widget(form.guardar, { 'attr' : {'class' : 'btn btn-success'}}) }}
 		</div>

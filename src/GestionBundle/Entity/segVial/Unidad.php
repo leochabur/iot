@@ -3,13 +3,21 @@
 namespace GestionBundle\Entity\segVial;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Unidad
  *
  * @ORM\Table(name="seg_vial_unidades")
  * @ORM\Entity(repositoryClass="GestionBundle\Repository\segVial\UnidadRepository")
+  * @UniqueEntity(
+ *     fields={"interno", "empresa"},
+ *     errorPath="interno",
+ *     message="Unidad existente en la Base de Datos"
+ * )
  */
+
 class Unidad
 {
     /**
@@ -25,66 +33,76 @@ class Unidad
      * @var int
      *
      * @ORM\Column(name="interno", type="integer")
+     * @Assert\NotNull(message="El campo no puede permanecer en blanco")
      */
     private $interno;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="chasisMarca", type="string", length=255)
+     * @ORM\Column(name="chasisMarca", type="string", length=255, nullable=true)
      */
     private $chasisMarca;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="chasisModelo", type="string", length=255)
+     * @ORM\Column(name="chasisModelo", type="string", length=255, nullable=true)
      */
     private $chasisModelo;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="carroceriaMarca", type="string", length=255)
+     * @ORM\Column(name="carroceriaMarca", type="string", length=255, nullable=true)
      */
     private $carroceriaMarca;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="carroceriaModelo", type="string", length=255)
+     * @ORM\Column(name="carroceriaModelo", type="string", length=255, nullable=true)
      */
     private $carroceriaModelo;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="capacidadReal", type="integer")
+     * @ORM\Column(name="capacidad", type="integer")
+     * @Assert\NotNull(message="El campo no puede permanecer en blanco")
      */
-    private $capacidadReal;
+    private $capacidad;
+
 
     /**
      * @var string
      *
-     * @ORM\Column(name="dominioAnterior", type="string", length=7)
+     * @ORM\Column(name="dominio", type="string", length=9, nullable=true)
+     * @Assert\NotNull(message="El campo no puede permanecer en blanco")
      */
-    private $dominioAnterior;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="dominioNuevo", type="string", length=9, nullable=true)
-     */
-    private $dominioNuevo;
+    private $dominio;
 
     /**
      * @var int
      *
      * @ORM\Column(name="anioModelo", type="integer")
+     * @Assert\NotNull(message="El campo no puede permanecer en blanco")
      */
     private $anioModelo;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="activo", type="boolean", options={"default": true})
+     */
+    private $activo = true;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Empresa")
+     * @ORM\JoinColumn(name="id_empresa", referencedColumnName="id")
+     */
+    private $empresa;
+    
     /**
      * Get id
      *
@@ -93,6 +111,11 @@ class Unidad
     public function getId()
     {
         return $this->id;
+    }
+
+    public function __toString()
+    {
+        return $this->interno."";
     }
 
     /**
@@ -216,75 +239,51 @@ class Unidad
     }
 
     /**
-     * Set capacidadReal
+     * Set capacidad
      *
-     * @param integer $capacidadReal
+     * @param integer $capacidad
      *
      * @return Unidad
      */
-    public function setCapacidadReal($capacidadReal)
+    public function setCapacidad($capacidad)
     {
-        $this->capacidadReal = $capacidadReal;
+        $this->capacidad = $capacidad;
 
         return $this;
     }
 
     /**
-     * Get capacidadReal
+     * Get capacidad
      *
      * @return integer
      */
-    public function getCapacidadReal()
+    public function getCapacidad()
     {
-        return $this->capacidadReal;
+        return $this->capacidad;
     }
 
     /**
-     * Set dominioAnterior
+     * Set dominio
      *
-     * @param string $dominioAnterior
+     * @param string $dominio
      *
      * @return Unidad
      */
-    public function setDominioAnterior($dominioAnterior)
+    public function setDominio($dominio)
     {
-        $this->dominioAnterior = $dominioAnterior;
+        $this->dominio = $dominio;
 
         return $this;
     }
 
     /**
-     * Get dominioAnterior
+     * Get dominio
      *
      * @return string
      */
-    public function getDominioAnterior()
+    public function getDominio()
     {
-        return $this->dominioAnterior;
-    }
-
-    /**
-     * Set dominioNuevo
-     *
-     * @param string $dominioNuevo
-     *
-     * @return Unidad
-     */
-    public function setDominioNuevo($dominioNuevo)
-    {
-        $this->dominioNuevo = $dominioNuevo;
-
-        return $this;
-    }
-
-    /**
-     * Get dominioNuevo
-     *
-     * @return string
-     */
-    public function getDominioNuevo()
-    {
-        return $this->dominioNuevo;
+        return $this->dominio;
     }
 
     /**
@@ -309,5 +308,53 @@ class Unidad
     public function getAnioModelo()
     {
         return $this->anioModelo;
+    }
+
+    /**
+     * Set activo
+     *
+     * @param boolean $activo
+     *
+     * @return Unidad
+     */
+    public function setActivo($activo)
+    {
+        $this->activo = $activo;
+
+        return $this;
+    }
+
+    /**
+     * Get activo
+     *
+     * @return boolean
+     */
+    public function getActivo()
+    {
+        return $this->activo;
+    }
+
+    /**
+     * Set empresa
+     *
+     * @param \AppBundle\Entity\Empresa $empresa
+     *
+     * @return Unidad
+     */
+    public function setEmpresa(\AppBundle\Entity\Empresa $empresa = null)
+    {
+        $this->empresa = $empresa;
+
+        return $this;
+    }
+
+    /**
+     * Get empresa
+     *
+     * @return \AppBundle\Entity\Empresa
+     */
+    public function getEmpresa()
+    {
+        return $this->empresa;
     }
 }

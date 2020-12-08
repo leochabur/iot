@@ -59,23 +59,17 @@ class Unidad
     /**
      * @var int
      *
-     * @ORM\Column(name="capacidadReal", type="integer")
+     * @ORM\Column(name="capacidad", type="integer")
      */
-    private $capacidadReal;
+    private $capacidad;
+
 
     /**
      * @var string
      *
-     * @ORM\Column(name="dominioAnterior", type="string", length=7)
+     * @ORM\Column(name="dominio", type="string", length=9, nullable=true)
      */
-    private $dominioAnterior;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="dominioNuevo", type="string", length=9, nullable=true)
-     */
-    private $dominioNuevo;
+    private $dominio;
 
     /**
      * @var int
@@ -84,7 +78,19 @@ class Unidad
      */
     private $anioModelo;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="activo", type="boolean", options={"default": true})
+     */
+    private $activo = true;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Empresa")
+     * @ORM\JoinColumn(name="id_empresa", referencedColumnName="id")
+     */
+    private $empresa;
+    
     /**
      * Get id
      *
@@ -94,6 +100,7 @@ class Unidad
     {
         return $this->id;
     }
+
 
     /**
      * Set interno
@@ -216,75 +223,51 @@ class Unidad
     }
 
     /**
-     * Set capacidadReal
+     * Set capacidad
      *
-     * @param integer $capacidadReal
+     * @param integer $capacidad
      *
      * @return Unidad
      */
-    public function setCapacidadReal($capacidadReal)
+    public function setCapacidad($capacidad)
     {
-        $this->capacidadReal = $capacidadReal;
+        $this->capacidad = $capacidad;
 
         return $this;
     }
 
     /**
-     * Get capacidadReal
+     * Get capacidad
      *
      * @return integer
      */
-    public function getCapacidadReal()
+    public function getCapacidad()
     {
-        return $this->capacidadReal;
+        return $this->capacidad;
     }
 
     /**
-     * Set dominioAnterior
+     * Set dominio
      *
-     * @param string $dominioAnterior
+     * @param string $dominio
      *
      * @return Unidad
      */
-    public function setDominioAnterior($dominioAnterior)
+    public function setDominio($dominio)
     {
-        $this->dominioAnterior = $dominioAnterior;
+        $this->dominio = $dominio;
 
         return $this;
     }
 
     /**
-     * Get dominioAnterior
+     * Get dominio
      *
      * @return string
      */
-    public function getDominioAnterior()
+    public function getDominio()
     {
-        return $this->dominioAnterior;
-    }
-
-    /**
-     * Set dominioNuevo
-     *
-     * @param string $dominioNuevo
-     *
-     * @return Unidad
-     */
-    public function setDominioNuevo($dominioNuevo)
-    {
-        $this->dominioNuevo = $dominioNuevo;
-
-        return $this;
-    }
-
-    /**
-     * Get dominioNuevo
-     *
-     * @return string
-     */
-    public function getDominioNuevo()
-    {
-        return $this->dominioNuevo;
+        return $this->dominio;
     }
 
     /**
@@ -309,5 +292,29 @@ class Unidad
     public function getAnioModelo()
     {
         return $this->anioModelo;
+    }
+
+    /**
+     * Set activo
+     *
+     * @param boolean $activo
+     *
+     * @return Unidad
+     */
+    public function setActivo($activo)
+    {
+        $this->activo = $activo;
+
+        return $this;
+    }
+
+    /**
+     * Get activo
+     *
+     * @return boolean
+     */
+    public function getActivo()
+    {
+        return $this->activo;
     }
 }

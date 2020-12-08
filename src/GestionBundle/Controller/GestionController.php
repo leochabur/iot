@@ -18,6 +18,8 @@ use GestionBundle\Entity\trafico\Turno;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use GestionBundle\Form\segVial\UnidadType;
+use GestionBundle\Entity\segVial\Unidad;
 
 class GestionController extends Controller
 {
@@ -28,6 +30,38 @@ class GestionController extends Controller
     public function principalAction()
     {
         return $this->render('@Gestion/principal.html.twig');
+    }
+
+    /**
+     * @Route("/opciones/addturn", name="agregar_turno", methods={"POST", "GET"})
+     */
+    public function nuevoTurnoAction(Request $request)
+    {
+        $turno = new TurnoCliente();
+        $turno->setEmpresa($this->getUser()->getEmpresa());
+        $form = $this->getFormAltaTurnoCliente($turno, '');
+        if ($request->isMethod('POST')) 
+        {
+            $em = $this->getDoctrine()->getManager();
+            $form->handleRequest($request);         
+            if ($form->isValid())
+            {               
+                $em->persist($turno);
+                $em->flush();
+                $this->addFlash(
+                                    'success',
+                                    'El turno ha sido almacenado exitosamente!'
+                                );
+                return $this->redirectToRoute('agregar_turno');
+            }
+        }
+
+        return $this->render('@Gestion/trafico/opciones/altaTurnoCliente.html.twig', ['label' => 'Nuevo', 'form' => $form->createView()]);
+    }
+
+    private function getFormAltaTurnoCliente($turno, $route)
+    {
+        return $this->createForm(TurnoClienteType::class, $turno, ['action' => $route]);
     }
 
     /**
@@ -80,6 +114,14 @@ class GestionController extends Controller
     	$route = $this->generateUrl('procesar_editar_ciudad', ['id' => $id]);
     	$em = $this->getDoctrine()->getManager();
     	$ciudad = $em->find(Ciudad::class, $id);
+        if ($ciudad->getEmpresa() !== $this->getUser()->getEmpresa())
+        {
+            $this->addFlash(
+                                'error',
+                                'No posee permisos para acceder a esta URL!'
+                            );
+            return $this->redirectToRoute('home_page');
+        }
     	$form = $this->getFormAltaCiudad($ciudad, $route);
         return $this->render('@Gestion/ventas/altaCiudad.html.twig', ['label' => 'Modificar', 'form' => $form->createView()]);
     }
@@ -92,6 +134,14 @@ class GestionController extends Controller
     	$route = $this->generateUrl('procesar_editar_ciudad', ['id' => $id]);
     	$em = $this->getDoctrine()->getManager();
     	$ciudad = $em->find(Ciudad::class, $id);
+        if ($ciudad->getEmpresa() !== $this->getUser()->getEmpresa())
+        {
+            $this->addFlash(
+                                'error',
+                                'No posee permisos para acceder a esta URL!'
+                            );
+            return $this->redirectToRoute('home_page');
+        }
     	$form = $this->getFormAltaCiudad($ciudad, $route);	
     	$form->handleRequest($request);	
 		if ($form->isValid())
@@ -124,7 +174,7 @@ class GestionController extends Controller
     			$em->flush();
 	            $this->addFlash(
 	                                'success',
-	                                'El cliente ha sido almacenada exitosamente!'
+	                                'El cliente ha sido almacenado exitosamente!'
 	                            );
     			return $this->redirectToRoute('agregar_cliente');
     		}
@@ -156,6 +206,14 @@ class GestionController extends Controller
     	$route = $this->generateUrl('procesar_editar_ccliente', ['id' => $id]);
     	$em = $this->getDoctrine()->getManager();
     	$cliente = $em->find(Cliente::class, $id);
+        if ($cliente->getEmpresa() !== $this->getUser()->getEmpresa())
+        {
+            $this->addFlash(
+                                'error',
+                                'No posee permisos para acceder a esta URL!'
+                            );
+            return $this->redirectToRoute('home_page');
+        }
     	$form = $this->getFormAltaCliente($cliente, $route);
         return $this->render('@Gestion/ventas/altaCliente.html.twig', ['label' => 'Modificar', 'form' => $form->createView()]);
     }
@@ -168,6 +226,14 @@ class GestionController extends Controller
     	$route = $this->generateUrl('procesar_editar_ccliente', ['id' => $id]);
     	$em = $this->getDoctrine()->getManager();
     	$cliente = $em->find(Cliente::class, $id);
+        if ($cliente->getEmpresa() !== $this->getUser()->getEmpresa())
+        {
+            $this->addFlash(
+                                'error',
+                                'No posee permisos para acceder a esta URL!'
+                            );
+            return $this->redirectToRoute('home_page');
+        }
     	$form = $this->getFormAltaCliente($cliente, $route);	
     	$form->handleRequest($request);	
 		if ($form->isValid())
@@ -238,6 +304,55 @@ class GestionController extends Controller
         return $this->render('@Gestion/trafico/listadoServicios.html.twig', ['form' => $form->createView()]);
     }
 
+    /**
+     * @Route("/opciones/editserv/{id}", name="editar_servicio")
+     */
+    public function editarServicioAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $servicio = $em->find(Servicio::class, $id);
+        if ($servicio->getEmpresa() !== $this->getUser()->getEmpresa())
+        {
+            $this->addFlash(
+                                'error',
+                                'No posee permisos para acceder a esta URL!'
+                            );
+            return $this->redirectToRoute('home_page');
+        }
+        $url = $this->generateUrl('procesar_editar_servicio', ['id' => $id]);
+        $form = $this->getFormAltaServicio($servicio, $url);
+        return $this->render('@Gestion/trafico/altaServicio.html.twig', ['edit' => true, 'srv' => $servicio, 'label' => 'Modificar', 'form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/opciones/editservprc/{id}", name="procesar_editar_servicio")
+     */
+    public function procesarEditarServicioAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $servicio = $em->find(Servicio::class, $id);
+        if ($servicio->getEmpresa() !== $this->getUser()->getEmpresa())
+        {
+            $this->addFlash(
+                                'error',
+                                'No posee permisos para acceder a esta URL!'
+                            );
+            return $this->redirectToRoute('home_page');
+        }
+        $url = $this->generateUrl('procesar_editar_servicio', ['id' => $id]);
+        $form = $this->getFormAltaServicio($servicio, $url);
+        $form->handleRequest($request);
+        if ($form->isValid())
+        {
+            $em->flush();
+            $this->addFlash(
+                                'success',
+                                'El servicio ha sido modificado exitosamente!'
+                            );
+            return $this->redirectToRoute('listado_servicios');
+        }
+        return $this->render('@Gestion/trafico/altaServicio.html.twig', ['edit' => true, 'srv' => $servicio, 'label' => 'Modificar', 'form' => $form->createView()]);
+    }
 
     private function getFormSelectClientes($empresa)
     {
@@ -273,6 +388,14 @@ class GestionController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $servicio = $em->find(Servicio::class, $id);
+        if ($servicio->getEmpresa() !== $this->getUser()->getEmpresa())
+        {
+            $this->addFlash(
+                                'error',
+                                'No posee permisos para acceder a esta URL!'
+                            );
+            return $this->redirectToRoute('home_page');
+        }
         $turno = new Turno();
         $turno->setServicio($servicio);
 
@@ -309,6 +432,14 @@ class GestionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $turno = $em->find(Turno::class, $id);
         $servicio = $turno->getServicio();
+        if ($servicio->getEmpresa() !== $this->getUser()->getEmpresa())
+        {
+            $this->addFlash(
+                                'error',
+                                'No posee permisos para acceder a esta URL!'
+                            );
+            return $this->redirectToRoute('home_page');
+        }
         $url = $this->generateUrl('editar_horarios_procesar', ['id' => $id]);
         $form = $this->getFormAltaTurno($turno, $servicio, $url);
         return $this->render('@Gestion/trafico/altaTurno.html.twig', ['edit' => true, 'srv' => $servicio, 'label' => 'Modificar', 'form' => $form->createView()]);
@@ -322,6 +453,14 @@ class GestionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $turno = $em->find(Turno::class, $id);
         $servicio = $turno->getServicio();
+        if ($servicio->getEmpresa() !== $this->getUser()->getEmpresa())
+        {
+            $this->addFlash(
+                                'error',
+                                'No posee permisos para acceder a esta URL!'
+                            );
+            return $this->redirectToRoute('home_page');
+        }
         $url = $this->generateUrl('editar_horarios_procesar', ['id' => $id]);
         $form = $this->getFormAltaTurno($turno, $servicio, $url);
         $form->handleRequest($request);
@@ -337,4 +476,35 @@ class GestionController extends Controller
         return $this->render('@Gestion/trafico/altaTurno.html.twig', ['edit' => true, 'srv' => $servicio, 'label' => 'Modificar', 'form' => $form->createView()]);
     }
 
+    /////////////////generacion de unidades
+    /**
+     * @Route("/tecnica/addunit", name="agregar_unidad", methods={"POST", "GET"})
+     */
+    public function nuevaUnidadAction(Request $request)
+    {
+        $unidad = new Unidad();
+        $unidad->setEmpresa($this->getUser()->getEmpresa());
+        $form = $this->getFormAltaUnidad($unidad, '');
+        if ($request->isMethod('POST')) 
+        {
+            $em = $this->getDoctrine()->getManager();
+            $form->handleRequest($request);         
+            if ($form->isValid())
+            {               
+                $em->persist($unidad);
+                $em->flush();
+                $this->addFlash(
+                                    'success',
+                                    'La unidad ha sido almacenada exitosamente!'
+                                );
+                return $this->redirectToRoute('agregar_unidad');
+            }
+        }
+        return $this->render('@Gestion/segVial/altaUnidad.html.twig', ['label' => 'Nueva', 'form' => $form->createView()]);
+    }
+
+    private function getFormAltaUnidad($unidad, $route)
+    {
+        return $this->createForm(UnidadType::class, $unidad, ['action' => $route]);
+    }
 }

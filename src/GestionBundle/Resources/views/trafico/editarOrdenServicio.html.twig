@@ -1,0 +1,59 @@
+{% extends '@App/base.html.twig' %}
+
+{% block content %}
+
+	<div class="h5 mt-5 mb-3">Modificar Orden Servicio</div>
+
+    <hr>
+    {% include '@Gestion/messages.html.twig'  %}
+    {{ form_start(form, {'attr' : {'novalidate' : 'novalidate', 'class' : 'border border-light'}}) }}
+	    <div class='form-row ml-4 mr-2 mt-2'>	
+	    	<div class=' col-lg-6 col-sm-12'>
+			    {{ form_label(form.turno) }}
+			    {{ form_widget(form.turno, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    {{ form_errors(form.turno) }}
+			</div> 
+	    	<div class=' col-lg-6 col-sm-12'>
+			    {{ form_label(form.cliente) }}
+			    {{ form_widget(form.cliente, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			</div>
+		</div>
+	    <div class='form-row ml-4 mr-2 mt-2'>	 
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.salida) }}
+			    {{ form_widget(form.salida, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    <div class="text-danger">{{ form_errors(form.salida) }}</div>
+			</div>
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.llegada) }}
+			    {{ form_widget(form.llegada, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    <div class="text-danger">{{ form_errors(form.llegada) }}</div>
+			</div>
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.unidad) }}
+			    {{ form_widget(form.unidad, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    <div class="text-danger">{{ form_errors(form.unidad) }}</div>
+			</div>
+		</div>
+
+	    <div class='form-row ml-4 mr-2 mt-2'>	 
+	    	<div class=''>
+			    {{ form_label(form.activa) }}
+			    {{ form_widget(form.activa) }}
+			</div>
+		</div>
+		<div class='form-row ml-4 mr-2 mt-2 align-right'>
+			{{ form_widget(form.guardar, { 'attr' : {'class' : 'btn btn-sm btn-default'}}) }}
+		</div>
+    {{ form_end(form) }}
+
+{% endblock %}
+
+{% block javascripts %}
+
+<script type="text/javascript">
+
+
+</script>
+{% endblock %}
+
