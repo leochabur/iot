@@ -95,6 +95,12 @@ class UserAuthenticator extends AbstractGuardAuthenticator
 
         $company = $this->em->getRepository('AppBundle:Empresa')->getEmpresaWithCodigo($token['company']);
 
+        if (!$company) 
+        {
+            throw new CustomUserMessageAuthenticationException(
+                                                                'Codido de empresa inexistente en la Base de Datos'
+                                                                );   
+        }
         try
         {
             $user = $repository->getUserWithCompany($token['username'], $company);
