@@ -1,0 +1,103 @@
+{% extends '@App/base.html.twig' %}
+
+{% block content %}
+	<div class="h5 mt-5 mb-3">Comunicar Servicios</div>
+    {{ form_start(form, {'attr' : {'novalidate' : 'novalidate', 'class' : 'border border-light'}}) }}
+	    <div class='form-row ml-4 mr-2 mt-2'>	 
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.fecha) }}
+			    {{ form_widget(form.fecha, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    {{ form_errors(form.fecha) }}
+			</div>
+		</div>
+		<div class='form-row ml-4 mr-2 mt-2 align-right'>
+			{{ form_widget(form.diagramar, { 'attr' : {'class' : 'btn btn-sm btn-default'}}) }}
+		</div>
+    {{ form_end(form) }}
+
+    <hr>
+    {% include '@Gestion/messages.html.twig'  %}
+    {% if ordenes is defined %}
+	    <div class="h5 mt-2 mb-3">Servicios diagramados para el : {{ fecha|date('d/m/Y') }}</div>
+		<table class="table table-hover table-bordered table-striped table-sm mt-2">
+		  <thead>
+		    <tr>
+		      <th scope="col">Cliente</th>
+		      <th scope="col">Servicio</th>
+		      <th scope="col">Hora Salida</th>
+		      <th scope="col">Hora Llegada</th>
+		       <th scope="col">Unidad</th>
+		       <th scope="col">Conductor</th>
+		       <th scope="col"></th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		  	{% for o in ordenes %}
+		  		<tr data-id="{{ o.id }}">
+		  			<td>{{ o.turno.servicio.cliente|upper }}</td>
+		  			<td>{{ o.turno.servicio|upper }}</td>
+		  			<td>{{ o.salida|date('d/m/Y - H:i') }}</td>
+		  			<td>{{ o.llegada|date('d/m/Y - H:i') }}</td>
+		  			<td class="text-right">{{ o.unidad }}</td>
+		  			<td>{{ o.conductor1 }}</td>
+		  			<td id="{{ o.id }}" class="status"></td>
+		  		</tr>
+		  	{% endfor %}
+		  </tbody>
+		</table>
+		<input type="button" class="btn btn-default" id="btnsnd" value="Comunicar informacion"/>
+	{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+				$("#btnsnd").click(function(){	
+												var path = "{{ path('comunicar_orden_servicio', { id : 'IDORDEN' }) }}";
+												bootbox.confirm({
+												    title: "Enviar informacion?",
+												    message: "Seguro enviar la informacion de los servicios diagramados?",
+												    buttons: {
+												        cancel: {
+												            label: '<i class="fa fa-times"></i> Cancelar'
+												        },
+												        confirm: {
+												            label: '<i class="fa fa-check"></i> Confirmar'
+												        }
+												    },
+												    callback: function (result) {
+														if (result)
+													    {
+													    	$(".status").html('<i class="fas fa-spinner fa-spin fa-2x"></i>');
+													    	$( ".status" ).each(function() {
+													    									var td = $(this);
+													    									var pathc = path.replace('IDORDEN', td.attr('id'));
+													    									$.post(pathc,
+													    										   function(data)
+													    										   {
+													    										   		if (data.error)
+													    										   		{
+													    										   			td.html('<i title="'+data.message+'" class="far fa-times-circle fa-2x"></i>');
+													    										   		}
+													    										   		else
+													    										   		{
+													    										   			td.html('<i class="far fa-check-circle fa-2x"></i>');
+													    										   		}
+													    										   });
+																						  
+																						});
+													    } 
+
+												    }
+												});															
+
+				});
+															
+
+});
+
+</script>
+{% endblock %}
+

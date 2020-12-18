@@ -30,6 +30,13 @@ class SentidoServicio
      */
     private $tipo;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="codigo", type="string", length=255)
+     */
+    private $codigo;
+
     public function __toString()
     {
         return strtoupper($this->tipo);
@@ -67,5 +74,29 @@ class SentidoServicio
     public function getTipo()
     {
         return $this->tipo;
+    }
+
+    /**
+     * Set codigo
+     *
+     * @param string $codigo
+     *
+     * @return SentidoServicio
+     */
+    public function setCodigo($codigo)
+    {
+        $this->codigo = $codigo;
+
+        return $this;
+    }
+
+    /**
+     * Get codigo
+     *
+     * @return string
+     */
+    public function getCodigo()
+    {
+        return $this->codigo;
     }
 }

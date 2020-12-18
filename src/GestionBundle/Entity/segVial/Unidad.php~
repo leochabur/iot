@@ -3,13 +3,21 @@
 namespace GestionBundle\Entity\segVial;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Unidad
  *
  * @ORM\Table(name="seg_vial_unidades")
  * @ORM\Entity(repositoryClass="GestionBundle\Repository\segVial\UnidadRepository")
+  * @UniqueEntity(
+ *     fields={"interno", "empresa"},
+ *     errorPath="interno",
+ *     message="Unidad existente en la Base de Datos"
+ * )
  */
+
 class Unidad
 {
     /**
@@ -25,34 +33,35 @@ class Unidad
      * @var int
      *
      * @ORM\Column(name="interno", type="integer")
+     * @Assert\NotNull(message="El campo no puede permanecer en blanco")
      */
     private $interno;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="chasisMarca", type="string", length=255)
+     * @ORM\Column(name="chasisMarca", type="string", length=255, nullable=true)
      */
     private $chasisMarca;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="chasisModelo", type="string", length=255)
+     * @ORM\Column(name="chasisModelo", type="string", length=255, nullable=true)
      */
     private $chasisModelo;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="carroceriaMarca", type="string", length=255)
+     * @ORM\Column(name="carroceriaMarca", type="string", length=255, nullable=true)
      */
     private $carroceriaMarca;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="carroceriaModelo", type="string", length=255)
+     * @ORM\Column(name="carroceriaModelo", type="string", length=255, nullable=true)
      */
     private $carroceriaModelo;
 
@@ -60,6 +69,7 @@ class Unidad
      * @var int
      *
      * @ORM\Column(name="capacidad", type="integer")
+     * @Assert\NotNull(message="El campo no puede permanecer en blanco")
      */
     private $capacidad;
 
@@ -68,6 +78,7 @@ class Unidad
      * @var string
      *
      * @ORM\Column(name="dominio", type="string", length=9, nullable=true)
+     * @Assert\NotNull(message="El campo no puede permanecer en blanco")
      */
     private $dominio;
 
@@ -75,6 +86,7 @@ class Unidad
      * @var int
      *
      * @ORM\Column(name="anioModelo", type="integer")
+     * @Assert\NotNull(message="El campo no puede permanecer en blanco")
      */
     private $anioModelo;
 
@@ -101,6 +113,10 @@ class Unidad
         return $this->id;
     }
 
+    public function __toString()
+    {
+        return $this->interno."";
+    }
 
     /**
      * Set interno
@@ -316,5 +332,29 @@ class Unidad
     public function getActivo()
     {
         return $this->activo;
+    }
+
+    /**
+     * Set empresa
+     *
+     * @param \AppBundle\Entity\Empresa $empresa
+     *
+     * @return Unidad
+     */
+    public function setEmpresa(\AppBundle\Entity\Empresa $empresa = null)
+    {
+        $this->empresa = $empresa;
+
+        return $this;
+    }
+
+    /**
+     * Get empresa
+     *
+     * @return \AppBundle\Entity\Empresa
+     */
+    public function getEmpresa()
+    {
+        return $this->empresa;
     }
 }

@@ -1,0 +1,43 @@
+{% extends '@App/base.html.twig' %}
+
+{% block content %}
+    <div class="h5 mt-5 mb-2">Listado de conductores</div>
+    {% include '@Gestion/messages.html.twig'  %}
+    <hr>
+
+	<table class="table table-hover table-bordered table-striped table-sm">
+	  <thead>
+	    <tr>
+	      <th scope="col">#</th>
+	      <th scope="col">Legajo</th>
+	      <th scope="col">Apellido</th>
+	      <th scope="col">Nombre</th>
+	      <th scope="col">DNI</th>
+	      <th scope="col"></th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	  	{% for s in conductores %}
+	  		<tr>
+	  			<td>{{ loop.index }} </td>
+	  			<td class="text-right">{{ s.legajo}}</td>
+	  			<td>{{ s.apellido|upper }}</td>
+	  			<td>{{ s.nombre|upper }}</td>
+	  			<td class="text-right">{{ s.dni }}</td>
+	  			<td class="text-center">
+	  					<a href="{{ path('editar_conductor', { id : s.id }) }}" class="btn btn-sm btn-default">Editar</a>
+	  			</td>
+	  		</tr>
+	  	{% endfor %}
+	  </tbody>
+	</table>
+
+{% endblock %}
+
+{% block javascripts %}
+
+<script type="text/javascript">
+
+</script>
+{% endblock %}
+

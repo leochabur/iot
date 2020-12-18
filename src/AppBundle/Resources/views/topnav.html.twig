@@ -9,7 +9,7 @@
 
         {% if is_granted('ROLE_CREATOR') %}
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle active btn" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <a class="nav-link dropdown-toggle active btn btn-sm" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Configuracion Sistema
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -32,7 +32,7 @@
         {% endif  %}
         {% if is_granted('ROLE_RESPONSABLE_DIAGRAMACION') %}
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle active btn" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <a class="nav-link dropdown-toggle active btn btn-sm" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Servicios
               </a>
 
@@ -68,24 +68,37 @@
             </li>
           
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle active btn" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <a class="nav-link dropdown-toggle active btn btn-sm" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Diagramacion
               </a>
 
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                   <li><a class="dropdown-item" href="{{ path('diagramar_turno') }}">Diagramar Servicio</a></li>
                   <li><a class="dropdown-item" href="{{ path('ver_diagrama_servicios') }}">Servicios Diagramados</a></li>
+                  <li><a class="dropdown-item" href="{{ path('comunicar_diagrama_servicios') }}">Comunicar Diagrama</a></li>
+
               </ul>
 
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle active btn" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <a class="nav-link dropdown-toggle active btn btn-sm" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Tecnica
               </a>
 
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                   <li><a class="dropdown-item" href="{{ path('agregar_unidad') }}">Nueva Unidad</a></li>
                   <li><a class="dropdown-item" href="{{ path('listado_unidades') }}">Listado Unidades</a></li>
+              </ul>
+
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle active btn btn-sm" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                RRHH
+              </a>
+
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <li><a class="dropdown-item" href="{{ path('agregar_conductor') }}">Nuevo Conductor</a></li>
+                  <li><a class="dropdown-item" href="{{ path('listar_conductor') }}">Listado Conductores</a></li>
               </ul>
 
             </li>

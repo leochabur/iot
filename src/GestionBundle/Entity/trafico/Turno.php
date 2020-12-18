@@ -59,6 +59,13 @@ class Turno
      */
     private $activo = true;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tipo", type="string", length=255)
+     * @Assert\NotNull(message="El campo no puede permanecer en blanco")
+     */
+    private $tipo;
 
     public function getVistaDiagrama()
     {
@@ -193,5 +200,29 @@ class Turno
     public function getActivo()
     {
         return $this->activo;
+    }
+
+    /**
+     * Set tipo
+     *
+     * @param string $tipo
+     *
+     * @return Turno
+     */
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
+
+        return $this;
+    }
+
+    /**
+     * Get tipo
+     *
+     * @return string
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
     }
 }

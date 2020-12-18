@@ -75,6 +75,7 @@ class Servicio
 
     /**
      * @ORM\OneToMany(targetEntity="Turno", mappedBy="servicio")
+     * @ORM\OrderBy({"horaInicial" = "ASC"})
      */
     private $turnos;
 

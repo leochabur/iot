@@ -20,6 +20,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use GestionBundle\Form\segVial\UnidadType;
 use GestionBundle\Entity\segVial\Unidad;
+use GestionBundle\Form\rrhh\ConductorType;
+use GestionBundle\Entity\rrhh\Conductor;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class GestionController extends Controller
@@ -567,5 +569,82 @@ class GestionController extends Controller
             return $this->redirectToRoute('listado_unidades');
         }
         return $this->render('@Gestion/segVial/altaUnidad.html.twig', ['label' => 'Modificar', 'form' => $form->createView()]);
+    }
+
+    /////////////////generacion de empleados
+    /**
+     * @Route("/rrhh/adddrive", name="agregar_conductor", methods={"POST", "GET"})
+     */
+    public function nuevoConductorAction(Request $request)
+    {
+        $conductor = new Conductor();
+        $conductor->setEmpresa($this->getUser()->getEmpresa());
+        $form = $this->getFormAltaConductor($conductor, '');
+        if ($request->isMethod('POST')) 
+        {
+            $em = $this->getDoctrine()->getManager();
+            $form->handleRequest($request);         
+            if ($form->isValid())
+            {               
+                $em->persist($conductor);
+                $em->flush();
+                $this->addFlash(
+                                    'success',
+                                    'El conductor ha sido almacenado exitosamente!'
+                                );
+                return $this->redirectToRoute('agregar_conductor');
+            }
+        }
+        return $this->render('@Gestion/rrhh/altaConductor.html.twig', ['label' => 'Nuevo', 'form' => $form->createView()]);
+    }
+
+    private function getFormAltaConductor($conductor, $route)
+    {
+        return $this->createForm(ConductorType::class, $conductor, ['action' => $route]);
+    }
+
+    /**
+     * @Route("/rrhh/lista", name="listar_conductor")
+     */
+    public function listarConductoresAction()
+    {
+        $repository = $this->getDoctrine()->getManager()->getRepository(Conductor::class);
+        $conductores = $repository->getConductoresEmpresa($this->getUser()->getEmpresa());
+        return $this->render('@Gestion/rrhh/listadoConductores.html.twig', ['conductores' => $conductores]);
+    }
+
+    /**
+     * @Route("/rrhh/editar/{id}", name="editar_conductor")
+     */
+    public function editarConductorAction($id)
+    {
+        $conductor = $this->getDoctrine()->getManager()->find(Conductor::class, $id);
+        $conductor->setEmpresa($this->getUser()->getEmpresa());
+        $url = $this->generateUrl('procesar_agregar_conductor', ['id' => $id]);
+        $form = $this->getFormAltaConductor($conductor, $url);
+        return $this->render('@Gestion/rrhh/altaConductor.html.twig', ['label' => 'Moificar', 'form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/rrhh/editarprc/{id}", name="procesar_agregar_conductor", methods={"POST"})
+     */
+    public function procesarEditarConductorAction($id, Request $request)
+    {
+        $conductor = $this->getDoctrine()->getManager()->find(Conductor::class, $id);
+        $url = $this->generateUrl('procesar_agregar_conductor', ['id' => $id]);
+        $form = $this->getFormAltaConductor($conductor, $url);
+        $form->handleRequest($request); 
+        $em = $this->getDoctrine()->getManager();
+        if ($form->isValid())
+        {               
+            $em->flush();
+            $this->addFlash(
+                                'success',
+                                'El conductor ha sido modificado exitosamente!'
+                            );
+            return $this->redirectToRoute('listar_conductor');
+        }
+        
+        return $this->render('@Gestion/rrhh/altaConductor.html.twig', ['label' => 'Modificar', 'form' => $form->createView()]);
     }
 }

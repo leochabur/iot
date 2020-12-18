@@ -1,0 +1,56 @@
+{% extends '@App/base.html.twig' %}
+
+{% block content %}
+
+		<div class="h5 mt-5 mb-3">{{ label }} Conductor</div>
+
+    <hr>
+    {% include '@Gestion/messages.html.twig'  %}
+    {{ form_start(form, {'attr' : {'novalidate' : 'novalidate', 'class' : 'border border-light'}}) }}
+	    <div class='form-row ml-4 mr-2 mt-2'>	 
+	    	<div class=' col-lg-6 col-sm-12'>
+			    {{ form_label(form.apellido) }}
+			    {{ form_widget(form.apellido, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    <div class="text-danger">{{ form_errors(form.apellido) }}</div>
+			</div>
+	    	<div class=' col-lg-6 col-sm-12'>
+			    {{ form_label(form.nombre) }}
+			    {{ form_widget(form.nombre, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    <div class="text-danger">{{ form_errors(form.nombre) }}</div>
+			</div>
+		</div>
+	    <div class='form-row ml-4 mr-2 mt-2'>	 
+	    	<div class=' col-lg-3 col-sm-12'>
+			    {{ form_label(form.legajo) }}
+			    {{ form_widget(form.legajo, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    <div class="text-danger">{{ form_errors(form.legajo) }}</div>
+			</div>
+	    	<div class=' col-lg-3 col-sm-12'>
+			    {{ form_label(form.dni) }}
+			    {{ form_widget(form.dni, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    <div class="text-danger">{{ form_errors(form.dni) }}</div>
+			</div>
+		</div>
+		{% if form.activo is defined %}
+		    <div class='form-row ml-4 mr-2 mt-2'>	 
+		    	<div class=''>
+				    {{ form_label(form.activo) }}
+				    {{ form_widget(form.activo) }}
+				</div>
+			</div>
+		{% endif %}
+		<div class='form-row ml-4 mr-2 mt-2 align-right'>
+			{{ form_widget(form.guardar, { 'attr' : {'class' : 'btn btn-sm btn-default'}}) }}
+		</div>
+    {{ form_end(form) }}
+
+{% endblock %}
+
+{% block javascripts %}
+
+<script type="text/javascript">
+
+
+</script>
+{% endblock %}
+

@@ -61,7 +61,7 @@ class Usuario  implements UserInterface
     private $plainPassword;
 
     /**
-    * @ORM\ManyToOne(targetEntity="Empresa") 
+    * @ORM\ManyToOne(targetEntity="Empresa", inversedBy="usuarios") 
     * @ORM\JoinColumn(name="id_empresa", referencedColumnName="id", nullable=true)
     */      
     private $empresa;

@@ -1,8 +1,68 @@
-{% extends 'base.html.twig' %}
+{% extends '@App/base.html.twig' %}
 
 {% block content %}
-    <div class="h2 mt-5">Nueva Empresa</div>
-
+    <div class="h3 mt-5 mb-3">Nueva Empresa</div>
+    <hr>
+    {% include '@Gestion/messages.html.twig'  %}
+    {{ form_start(form, {'attr' : {'novalidate' : 'novalidate', 'class' : 'border border-light'}}) }}
+	    <div class='form-row ml-4 mr-2 mt-2'>	 
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.razonSocial) }}
+			    {{ form_widget(form.razonSocial, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    <div class="text-danger">{{ form_errors(form.razonSocial) }}</div>
+			</div>
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.cuit) }}
+			    {{ form_widget(form.cuit, { 'attr' : {'class' : 'form-control text-uppercase form-control-sm'}}) }}
+			    <div class="text-danger">{{ form_errors(form.cuit) }}</div>
+			</div>
+	    	<div class=' col-lg-2 col-sm-12'>
+			    {{ form_label(form.codigo) }}
+			    {{ form_widget(form.codigo, { 'attr' : {'class' : 'form-control text-uppercase form-control-sm'}}) }}
+			    <div class="text-danger">{{ form_errors(form.codigo) }}</div>
+			</div>
+		</div>
+	    <div class='form-row ml-4 mr-2 mt-2'>	 
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.contacto) }}
+			    {{ form_widget(form.contacto, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    <div class="text-danger">{{ form_errors(form.contacto) }}</div>
+			</div>
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.telefono) }}
+			    {{ form_widget(form.telefono, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    <div class="text-danger">{{ form_errors(form.telefono) }}</div>
+			</div>			
+		</div>
+	    <div class='form-row ml-4 mr-2 mt-2'>	
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.url) }}
+			    {{ form_widget(form.url, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    <div class="text-danger">{{ form_errors(form.url) }}</div>
+			</div>    
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.direccion) }}
+			    {{ form_widget(form.direccion, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    <div class="text-danger">{{ form_errors(form.direccion) }}</div>
+			</div>    
+	    	<div class=' col-lg-4 col-sm-12'>
+			    {{ form_label(form.email) }}
+			    {{ form_widget(form.email, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    <div class="text-danger">{{ form_errors(form.email) }}</div>
+			</div>
+		</div>
+		{% if form.activo is defined %}
+		    <div class='form-row ml-4 mr-2 mt-2'>	    
+		    	<div class=' col-lg-4 col-sm-12'>
+				    {{ form_label(form.activo) }}
+				    {{ form_widget(form.activo) }}
+				</div>    
+			</div>
+		{% endif %}
+		<div class='form-row ml-4 mr-2 mt-2 align-right'>
+			{{ form_widget(form.guardar, { 'attr' : {'class' : 'btn btn-default'}}) }}
+		</div>
+    {{ form_end(form) }}
     {{ form_start(form, {'attr' : {'novalidate' : 'novalidate'}}) }}
     {{ form_widget(form) }}
     {{ form_end(form) }}

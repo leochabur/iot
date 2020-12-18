@@ -64,6 +64,36 @@ class OrdenServicio
      */
     private $unidad;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="GestionBundle\Entity\rrhh\Conductor")
+     * @ORM\JoinColumn(name="id_conductor_1", referencedColumnName="id", nullable=true)
+     */
+    private $conductor1;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="GestionBundle\Entity\rrhh\Conductor")
+     * @ORM\JoinColumn(name="id_conductor_2", referencedColumnName="id", nullable=true)
+     */
+    private $conductor2;
+
+    public function getOrdenAsArray()
+    {
+      return array('idServicio' => $this->getTurno()->getId(),
+                   'idOrden' =>  $this->id,
+                   'idCronograma' => $this->getTurno()->getServicio()->getId(),
+                   'Cronograma' => $this->getTurno()->getServicio()->getNombre(),
+                    'idCliente' => $this->getTurno()->getServicio()->getCliente()->getId(),
+                    'Cliente' => $this->getTurno()->getServicio()->getCliente().'',
+                    'Origen' => $this->getTurno()->getServicio()->getOrigen().'',
+                    'Destino' => $this->getTurno()->getServicio()->getDestino().'',
+                    'Fecha_Servicio' => $this->fecha->format('Y-m-d'),
+                    'interno' => $this->getUnidad()->getInterno(),
+                    'Horario_Cabecera' => $this->salida->format('H:i:s'),
+                    'Horario_Llegada' => $this->salida->format('H:i:s'),
+                    'type' => $this->turno->getTipo(),
+                    'direction' => $this->turno->getServicio()->getSentido()->getCodigo()
+                     );
+    }
 
     /**
      * Get id
@@ -233,5 +263,53 @@ class OrdenServicio
     public function setFechaServicio()
     {
         $this->fecha = $this->salida;
+    }
+
+    /**
+     * Set conductor1
+     *
+     * @param \GestionBundle\Entity\rrhh\Conductor $conductor1
+     *
+     * @return OrdenServicio
+     */
+    public function setConductor1(\GestionBundle\Entity\rrhh\Conductor $conductor1 = null)
+    {
+        $this->conductor1 = $conductor1;
+
+        return $this;
+    }
+
+    /**
+     * Get conductor1
+     *
+     * @return \GestionBundle\Entity\rrhh\Conductor
+     */
+    public function getConductor1()
+    {
+        return $this->conductor1;
+    }
+
+    /**
+     * Set conductor2
+     *
+     * @param \GestionBundle\Entity\rrhh\Conductor $conductor2
+     *
+     * @return OrdenServicio
+     */
+    public function setConductor2(\GestionBundle\Entity\rrhh\Conductor $conductor2 = null)
+    {
+        $this->conductor2 = $conductor2;
+
+        return $this;
+    }
+
+    /**
+     * Get conductor2
+     *
+     * @return \GestionBundle\Entity\rrhh\Conductor
+     */
+    public function getConductor2()
+    {
+        return $this->conductor2;
     }
 }

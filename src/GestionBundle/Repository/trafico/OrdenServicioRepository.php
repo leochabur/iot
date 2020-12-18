@@ -28,4 +28,16 @@ class OrdenServicioRepository extends \Doctrine\ORM\EntityRepository
 						->getQuery()
 						->getResult();
 	} 
+	public function getOrdenServicioEmpresa(\AppBundle\Entity\Empresa $empresa, $id) 
+	{ 
+			return $this->createQueryBuilder('o')
+						->join('o.turno', 't')
+						->join('t.servicio', 's')
+						->where('s.empresa = :empresa')
+						->andWhere('o.id = :id')
+						->setParameter('empresa', $empresa)
+						->setParameter('id', $id)
+						->getQuery()
+						->getOneOrNullResult();
+	} 
 }

@@ -44,6 +44,7 @@ class Empresa
      * @var int
      *
      * @ORM\Column(name="codigo", type="integer")
+     * @Assert\NotBlank(message="El campo no puede permanecer en blanco")
      */
     private $codigo;
 
@@ -80,6 +81,19 @@ class Empresa
      * @ORM\Column(name="fechaAlta", type="datetime")
      */
     private $fechaAlta;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="url", type="string")
+     * @Assert\NotBlank(message="El campo no puede permanecer en blanco")
+     */
+    private $url;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Usuario", mappedBy="empresa")
+     */
+    private $usuarios;
 
 
     public function __toString()
@@ -311,5 +325,29 @@ class Empresa
     public function getDireccion()
     {
         return $this->direccion;
+    }
+
+    /**
+     * Set url
+     *
+     * @param string $url
+     *
+     * @return Empresa
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    /**
+     * Get url
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
     }
 }

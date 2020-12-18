@@ -12,6 +12,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class TurnoType extends AbstractType
 {
@@ -31,6 +32,17 @@ class TurnoType extends AbstractType
                       'choices' => [$servicio],
                       ]
                   )
+                ->add('tipo', ChoiceType::class, array(
+                    'choices' => 
+                    array
+                    (
+                        'Compañia' => 'company',
+                        'Charter' => 'charter'
+                    ) 
+                    ,
+                    'required' => true,
+                    )
+                )
                 ->add('turno',
                       EntityType::class, 
                       [

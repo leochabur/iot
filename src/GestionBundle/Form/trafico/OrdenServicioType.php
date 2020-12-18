@@ -41,6 +41,36 @@ class OrdenServicioType extends AbstractType
                        'required' => false
                       ]
                     )
+                ->add('conductor1',
+                      EntityType::class, 
+                      [
+                      'class' => 'GestionBundle:rrhh\Conductor',
+                      'query_builder' => function (EntityRepository $er) use ($empresa){
+                                                                                        return $er->createQueryBuilder('u')
+                                                                                                  ->where('u.empresa = :empresa')
+                                                                                                  ->andWhere('u.activo = :activo')
+                                                                                                  ->setParameter('empresa', $empresa)
+                                                                                                  ->setParameter('activo', true)
+                                                                                                  ->orderBy('u.apellido', 'ASC');
+                       },
+                       'required' => false
+                      ]
+                    )
+                ->add('conductor2',
+                      EntityType::class, 
+                      [
+                      'class' => 'GestionBundle:rrhh\Conductor',
+                      'query_builder' => function (EntityRepository $er) use ($empresa){
+                                                                                        return $er->createQueryBuilder('u')
+                                                                                                  ->where('u.empresa = :empresa')
+                                                                                                  ->andWhere('u.activo = :activo')
+                                                                                                  ->setParameter('empresa', $empresa)
+                                                                                                  ->setParameter('activo', true)
+                                                                                                  ->orderBy('u.apellido', 'ASC');
+                       },
+                       'required' => false
+                      ]
+                    )
                 ->addEventListener(
                                     FormEvents::PRE_SET_DATA,
                                     [$this, 'onPreSetData']

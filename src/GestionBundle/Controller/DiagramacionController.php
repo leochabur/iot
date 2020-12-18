@@ -11,6 +11,7 @@ use GestionBundle\Entity\ventas\Cliente;
 use Symfony\Component\HttpFoundation\Request;
 use GestionBundle\Form\trafico\OrdenServicioType;
 use GestionBundle\Entity\trafico\OrdenServicio;
+use GestionBundle\Entity\comunicacion\OrdenInformada;
 use GestionBundle\Form\trafico\opciones\TurnoClienteType;
 use GestionBundle\Entity\trafico\opciones\TurnoCliente;
 use GestionBundle\Form\trafico\TurnoType;
@@ -21,6 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use GestionBundle\Services\Diagrama;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DiagramacionController extends Controller
 {
@@ -185,6 +187,114 @@ class DiagramacionController extends Controller
     private function getFormAltaOrdenServicio($orden, $route)
     {
         return $this->createForm(OrdenServicioType::class, $orden, ['empresa' => $this->getUser()->getEmpresa(), 'action' => $route]);
+    }
+
+    /**
+     * @Route("/diagramacion/comunicar/{fecha}", name="comunicar_diagrama_servicios", methods={"POST", "GET"})
+     * @ParamConverter("fecha", options={"format": "Y-m-d"})
+     */
+    public function comunicarDiagramaServiciosAction(\DateTime $fecha = null, Request $request)
+    {
+        $form = $this->getFormSelectFechaDiagrama($fecha);
+        if ($request->isMethod('POST'))
+        {
+            $em = $this->getDoctrine()->getManager();
+            $form->handleRequest($request);
+            if ($form->isValid())
+            {
+                $data = $form->getData();
+                $ordenes = $em->getRepository(OrdenServicio::class)->getOrdenesServicioEmpresa($this->getUser()->getEmpresa(), $data['fecha']);
+                return $this->render('@Gestion/trafico/comunicarServicios.html.twig', ['fecha' => $data['fecha'], 'ordenes' => $ordenes, 'form' => $form->createView()]);
+            }
+        }
+
+        if ($fecha)
+        {
+            $em = $this->getDoctrine()->getManager();
+            $ordenes = $em->getRepository(OrdenServicio::class)->getOrdenesServicioEmpresa($this->getUser()->getEmpresa(), $fecha->format('Y-m-d'));
+            return $this->render('@Gestion/trafico/comunicarServicios.html.twig', ['fecha' => $fecha, 'ordenes' => $ordenes, 'form' => $form->createView()]);
+        }
+        return $this->render('@Gestion/trafico/comunicarServicios.html.twig', ['form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/diagramacion/comunicarorden/{id}", name="comunicar_orden_servicio")
+     */
+    public function comunicarOrdenServiciosAction($id)
+    {
+        $repository = $this->getDoctrine()->getManager()->getRepository(OrdenServicio::class);
+        try
+        {
+            $orden = $repository->getOrdenServicioEmpresa($this->getUser()->getEmpresa(), $id);
+        }
+        catch (\Exception $e) {
+                                return new JsonResponse(['data' => $e->getMessage()]);
+                                }
+
+        if (!$orden->getUnidad())
+        {
+            return new JsonResponse(['error' => true, 'message' => 'Debe cargarle una unidad a la orden para poder comunicarla!']);
+        }
+
+        if ($orden)
+        {
+            $path = $this->getUser()->getEmpresa()->getUrl();
+            if ($path)
+            {
+
+                      $export = [$orden->getOrdenAsArray()];
+
+                      $payload = json_encode($export);
+                      $curl = curl_init();
+                      curl_setopt_array($curl, array(
+                        CURLOPT_URL => "$path",
+                        CURLOPT_CUSTOMREQUEST => "POST",
+                        CURLOPT_POSTFIELDS =>"{'trips':$payload}",
+                        CURLOPT_RETURNTRANSFER => 1, 
+                        CURLOPT_HTTPHEADER => array(
+                          "Authorization: Bearer d8Ypl7DMuQsHjjW/INIHxRXjiV1BSezxrmbTV8EWZvk=",
+                          "Content-Type: text/plain"
+                        ),
+                      ));
+                      $response = curl_exec($curl);        
+
+
+
+                      $json = json_decode($response, true);
+                      if (isset($json['success']))
+                      {
+                          $result = $json['success'];
+                      }
+                      else
+                      {
+                          $result = 0;
+                      }
+                      try
+                      {
+                            $mensaje = '';
+                            foreach ($json['errors'] as $m)
+                            {
+                                if ($mensaje)
+                                    $mensaje.=", ";
+                                $mensaje.= $m;
+                            }
+
+                          $oi = new OrdenInformada();
+                          $oi->setFecha(new \DateTime());
+                          $oi->setRequest($payload);
+                          $oi->setRespuestaJson($response);
+                          $oi->setStatus($result);
+                          $oi->setMensajeRespuesta($mensaje);
+                          $oi->setOrden($orden);
+                          $em = $this->getDoctrine()->getManager();
+                          $em->persist($oi);
+                          $em->flush();
+                     }
+                     catch(\Exception $e){return new JsonResponse(['error' => true, 'message' => $e->getMessage()]);}
+                      return new JsonResponse(['error' => ($result?false:true), 'message' => $mensaje]);
+            }
+            return new JsonResponse(['error' => true, 'message' => 'La empresa no tiene configurada la URL donde comunicar los servicios!.]);
+        }
     }
 
 }

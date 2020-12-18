@@ -35,7 +35,18 @@
 			    <div class="text-danger">{{ form_errors(form.unidad) }}</div>
 			</div>
 		</div>
-
+	    <div class='form-row ml-4 mr-2 mt-2'>	
+	    	<div class=' col-lg-6 col-sm-12'>
+			    {{ form_label(form.conductor1) }}
+			    {{ form_widget(form.conductor1, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    {{ form_errors(form.conductor1) }}
+			</div> 
+	    	<div class=' col-lg-6 col-sm-12'>
+			    {{ form_label(form.conductor2) }}
+			    {{ form_widget(form.conductor2, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+			    {{ form_errors(form.conductor2) }}
+			</div>
+		</div>
 	    <div class='form-row ml-4 mr-2 mt-2'>	 
 	    	<div class=''>
 			    {{ form_label(form.activa) }}
