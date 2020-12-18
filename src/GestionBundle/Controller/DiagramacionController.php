@@ -293,7 +293,7 @@ class DiagramacionController extends Controller
                      catch(\Exception $e){return new JsonResponse(['error' => true, 'message' => $e->getMessage()]);}
                       return new JsonResponse(['error' => ($result?false:true), 'message' => $mensaje]);
             }
-            return new JsonResponse(['error' => true, 'message' => 'La empresa no tiene configurada la URL donde comunicar los servicios!.]);
+            return new JsonResponse(['error' => true, 'message' => 'La empresa no tiene configurada la URL donde comunicar los servicios!.']);
         }
     }
 
