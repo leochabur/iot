@@ -76,6 +76,18 @@ class OrdenServicio
      */
     private $conductor2;
 
+    /**
+     * @ORM\OneToMany(targetEntity="GestionBundle\Entity\comunicacion\OrdenInformada", mappedBy="orden")
+     * @ORM\OrderBy({"fecha" = "ASC"})
+     */
+    private $informadas;
+
+
+    public function getUltimaComunicacion()
+    {
+        return $this->informadas->last();
+    }
+
     public function getOrdenAsArray()
     {
       return array('idServicio' => $this->getTurno()->getId(),
@@ -311,5 +323,46 @@ class OrdenServicio
     public function getConductor2()
     {
         return $this->conductor2;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->informadas = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add informada
+     *
+     * @param \GestionBundle\Entity\comunicacion\OrdenInformada $informada
+     *
+     * @return OrdenServicio
+     */
+    public function addInformada(\GestionBundle\Entity\comunicacion\OrdenInformada $informada)
+    {
+        $this->informadas[] = $informada;
+
+        return $this;
+    }
+
+    /**
+     * Remove informada
+     *
+     * @param \GestionBundle\Entity\comunicacion\OrdenInformada $informada
+     */
+    public function removeInformada(\GestionBundle\Entity\comunicacion\OrdenInformada $informada)
+    {
+        $this->informadas->removeElement($informada);
+    }
+
+    /**
+     * Get informadas
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getInformadas()
+    {
+        return $this->informadas;
     }
 }

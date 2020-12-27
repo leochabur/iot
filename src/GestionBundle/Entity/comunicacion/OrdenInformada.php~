@@ -57,7 +57,7 @@ class OrdenInformada
     private $mensajeRespuesta;
 
     /**
-     * @ORM\ManyToOne(targetEntity="GestionBundle\Entity\trafico\OrdenServicio")
+     * @ORM\ManyToOne(targetEntity="GestionBundle\Entity\trafico\OrdenServicio", inversedBy="informadas")
      * @ORM\JoinColumn(name="id_orden", referencedColumnName="id")
      */
     private $orden;
@@ -167,5 +167,52 @@ class OrdenInformada
     {
         return $this->mensajeRespuesta;
     }
-}
 
+    /**
+     * Set status
+     *
+     * @param boolean $status
+     *
+     * @return OrdenInformada
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return boolean
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set orden
+     *
+     * @param \GestionBundle\Entity\trafico\OrdenServicio $orden
+     *
+     * @return OrdenInformada
+     */
+    public function setOrden(\GestionBundle\Entity\trafico\OrdenServicio $orden = null)
+    {
+        $this->orden = $orden;
+
+        return $this;
+    }
+
+    /**
+     * Get orden
+     *
+     * @return \GestionBundle\Entity\trafico\OrdenServicio
+     */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+}

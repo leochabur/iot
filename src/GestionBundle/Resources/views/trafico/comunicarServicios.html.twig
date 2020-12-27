@@ -28,7 +28,7 @@
 		      <th scope="col">Hora Llegada</th>
 		       <th scope="col">Unidad</th>
 		       <th scope="col">Conductor</th>
-		       <th scope="col"></th>
+		       <th scope="col">Estado</th>
 		    </tr>
 		  </thead>
 		  <tbody>
@@ -40,7 +40,18 @@
 		  			<td>{{ o.llegada|date('d/m/Y - H:i') }}</td>
 		  			<td class="text-right">{{ o.unidad }}</td>
 		  			<td>{{ o.conductor1 }}</td>
-		  			<td id="{{ o.id }}" class="status"></td>
+		  			<td id="{{ o.id }}" class="status">
+		  				{% if o.UltimaComunicacion %}
+		  					{% if o.ultimaComunicacion.status %}
+		  						<i class="far fa-check-circle fa-2x" title="Ultima comunicacion: {{ o.ultimaComunicacion.fecha|date('d/m/Y - H:i:s')}}"></i>
+		  					{% else %}
+		  						<i class="far fa-times-circle fa-2x" title="Ultima comunicacion: {{ o.ultimaComunicacion.fecha|date('d/m/Y - H:i:s')}} - Error: {{ o.ultimaComunicacion.mensajeRespuesta }}"></i>
+		  					{% endif %}
+		  				{% else %}
+		  					<i class="far fa-times-circle fa-2x" title="No se ha realizado aun ninguna comunicacion"></i>
+		  				{% endif %}
+
+		  			</td>
 		  		</tr>
 		  	{% endfor %}
 		  </tbody>

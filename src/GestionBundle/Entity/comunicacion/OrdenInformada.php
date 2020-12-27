@@ -57,7 +57,7 @@ class OrdenInformada
     private $mensajeRespuesta;
 
     /**
-     * @ORM\ManyToOne(targetEntity="GestionBundle\Entity\trafico\OrdenServicio")
+     * @ORM\ManyToOne(targetEntity="GestionBundle\Entity\trafico\OrdenServicio", inversedBy="informadas")
      * @ORM\JoinColumn(name="id_orden", referencedColumnName="id")
      */
     private $orden;
