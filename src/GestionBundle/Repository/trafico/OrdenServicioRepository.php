@@ -28,6 +28,7 @@ class OrdenServicioRepository extends \Doctrine\ORM\EntityRepository
 						->getQuery()
 						->getResult();
 	} 
+
 	public function getOrdenServicioEmpresa(\AppBundle\Entity\Empresa $empresa, $id) 
 	{ 
 			return $this->createQueryBuilder('o')
@@ -39,5 +40,23 @@ class OrdenServicioRepository extends \Doctrine\ORM\EntityRepository
 						->setParameter('id', $id)
 						->getQuery()
 						->getOneOrNullResult();
+	} 
+
+	public function getOrdenServicioEmpresaConStamp(\AppBundle\Entity\Empresa $empresa, $stamp) 
+	{ 
+			return $this->createQueryBuilder('o')
+						->join('o.turno', 't')
+						->join('t.servicio', 's')
+						->join('s.cliente', 'c')
+						->where('s.empresa = :empresa')
+						->andWhere('o.activa = :activa')
+						->andWhere('o.stampAlta = :stamp')
+						->setParameter('empresa', $empresa)
+						->setParameter('activa', true)
+						->setParameter('stamp', $stamp)
+						->orderBy('c.razonSocial')
+						->addOrderBy('s.nombre')
+						->getQuery()
+						->getResult();
 	} 
 }

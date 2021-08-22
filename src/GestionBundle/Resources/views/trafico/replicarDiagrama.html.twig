@@ -1,0 +1,109 @@
+{% extends '@App/base.html.twig' %}
+
+{% block content %}
+	<div class="h5 mt-5 mb-3">Replicar Diagrama Servicios</div>
+    {{ form_start(form, {'attr' : {'class' : 'border border-light'}}) }}
+	    <div class='form-row ml-4 mr-2 mt-2'>	 
+	    	<div class=' col-lg-4 col-sm-12'>
+	    		<div class='form-row'>
+	    			<div class='col-lg-8'>
+					    {{ form_label(form.origen, 'Diagrama Origen') }}
+					    {{ form_widget(form.origen, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase data-origen'}}) }}			    
+					    {{ form_errors(form.origen) }}
+					</div>
+					<div class='col-lg-3 pt-1'>
+						<a class="showdetail"><i class="fas fa-binoculars fa-2x mt-4 pt-1"></i></a>
+					</div>
+				</div>
+			</div>
+
+	    	<div class=' col-lg-3 col-sm-12 ml-2'>
+			    {{ form_label(form.destino, 'Fecha Destino') }}
+			    {{ form_widget(form.destino, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase data-destino'}}) }}
+			    {{ form_errors(form.destino) }}
+			</div>
+		</div>
+		<div class='form-row ml-4 mr-2 mt-2 align-right'>
+			{{ form_widget(form.diagramar, { 'attr' : {'class' : 'btn btn-sm btn-default replicate'}}) }}
+		</div>
+    {{ form_end(form) }}
+    <hr>
+    {% if status is defined %}
+    	{% if status == 'success' %}
+			<div class="alert alert-primary mt-1" role="alert">
+			  Replica realizada exitosamente!. (Si desea deshacer los cambios, haga click <a href="{{ path('deshacer_replicar_diagrama_servicios', { stamp : stamp}) }}"><strong>aqui</strong></a>)
+			</div>
+		{% elseif status == 'error' %}
+			<div class="alert alert-danger mt-1" role="alert">
+			  {{ message }}
+			</div>
+		{% endif %}
+    {% endif %}
+	<div class='form-row mt-2 align-center' id='detail'>
+		
+	</div>
+
+    {% include '@Gestion/messages.html.twig'  %}
+
+{% endblock %}
+
+{% block javascripts %}
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+				const loading = '<div class="spinner-border" style="width: 3rem; height: 3rem;" role="status"><span class="sr-only">Loading...</span></div>';
+				$('.showdetail').click(function(evt){
+													 evt.preventDefault();
+													 $('#detail').html(loading);
+													 $.post("{{ path('detalle_diagrama_servicios') }}",
+													 		{
+													 			fecha : $('.data-origen').val()
+													 		},
+													 		function(data){
+													 						$('#detail').html(data);
+													 		});
+				});
+
+				$(".replicate").click(function(event){													
+												event.preventDefault();
+												const origen = $('.data-origen').val(), destino = $('.data-destino').val(), btn = $(this);
+												if (!origen)
+												{
+													bootbox.alert("El campo Diagrama Origen no puede permanecer en blanco!");
+													return;
+												}
+												if (!destino)
+												{
+													bootbox.alert("El campo Fecha Destino no puede permanecer en blanco!");
+													return;
+												}
+
+												bootbox.confirm({
+												    message: "Seguro copiar el diagrama de fecha "+origen+", al dia "+destino,
+												    size: 'large',
+												    buttons: {
+												        cancel: {
+												            label: '<i class="fa fa-times"></i> Cancelar'
+												        },
+												        confirm: {
+												            label: '<i class="fa fa-check"></i> Confirmar'
+												        }
+												    },
+												    callback: function (result) {
+														if (result)
+													    {
+													    	btn.closest('form').submit();
+													    } 
+
+												    }
+												});															
+
+				});
+															
+
+});
+
+</script>
+{% endblock %}
+

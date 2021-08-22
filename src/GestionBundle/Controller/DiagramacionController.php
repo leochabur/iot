@@ -40,9 +40,12 @@ class DiagramacionController extends Controller
             $form->handleRequest($request);         
             if ($form->isValid())
             {            
+                $empresa = $this->getUser()->getEmpresa();
                 $data = $form->getData();
                 $diagramacion = $this->get('app.diagrama');   
-                $orden = $diagramacion->diagramarOrdenServicio($data['turno'], $data['fecha']);
+                $orden = $diagramacion->diagramarOrdenServicio($data['turno'], $data['fecha'], $empresa);
+                $orden->setUserAlta($this->getUser());
+                $orden->updateCreate();
                 $em->persist($orden);
                 $em->flush();
                 $this->addFlash(
@@ -295,6 +298,113 @@ class DiagramacionController extends Controller
             }
             return new JsonResponse(['error' => true, 'message' => 'La empresa no tiene configurada la URL donde comunicar los servicios!.']);
         }
+    }
+
+
+    /**
+     * @Route("/diagramacion/undo/{stamp}", name="deshacer_replicar_diagrama_servicios")
+     */
+    public function deshacerReplicaDiagramaAction($stamp)
+    {
+        $delay = (5 * 60);
+        $fecha = new \DateTime();
+        $fecha = $fecha->getTimestamp();
+
+        $form = $this->getFormReplicarDiagrama();
+
+        if (($fecha - $stamp) > $delay)
+        {
+            $this->addFlash('error', 'Se ha excedido el tiempo para realizar esta accion!');
+        }
+        else
+        {
+            $em = $this->getDoctrine()->getEntityManager();
+            $user = $this->getUser();
+            $ordenesAEliminar = $em->getRepository(OrdenServicio::class)->getOrdenServicioEmpresaConStamp($user->getEmpresa(), $stamp);
+            $fecha = new \DateTime();
+            $fecha = $fecha->getTimestamp();
+            foreach ($ordenesAEliminar as $ord)
+            {
+                $ord->setActiva(false);
+                $ord->setUserBaja($user);
+                $ord->setStampBaja($fecha);
+            }
+            $em->flush();
+            $this->addFlash('success', 'Se han eliminado exitosamente las ordenes de servicio!');            
+        }
+        return $this->redirectToRoute('replicar_diagrama_servicios');
+    }
+
+
+    /**
+     * @Route("/diagramacion/replicar", name="replicar_diagrama_servicios", methods={"POST", "GET"})
+     */
+    public function replicarDiagramaServiciosAction( Request $request)
+    {
+        $form = $this->getFormReplicarDiagrama();
+        if ($request->isMethod('POST'))
+        {
+            $em = $this->getDoctrine()->getManager();
+            $form->handleRequest($request);
+            if ($form->isValid())
+            {
+                try
+                {
+                    $data = $form->getData();
+                    $ordenes = $em->getRepository(OrdenServicio::class)->getOrdenesServicioEmpresa($this->getUser()->getEmpresa(), $data['origen']);
+                    $diagramacion = $this->get('app.diagrama');   
+
+                    $fecha = new \DateTime();
+                    $fecha = $fecha->getTimestamp();
+
+                    $empresa = $this->getUser()->getEmpresa();
+
+                    foreach ($ordenes as $ord)
+                    {
+                        $destino = $diagramacion->diagramarOrdenServicio($ord->getTurno(), $data['destino'], $empresa);
+                        $destino->setUnidad($ord->getUnidad());
+                        $destino->setConductor1($ord->getConductor1());
+                        $destino->setConductor2($ord->getConductor2());
+                        $destino->setUserAlta($this->getUser());
+                        $destino->setStampAlta($fecha);
+                        $em->persist($destino);
+                    }
+                    $em->flush();
+                    return $this->render('@Gestion/trafico/replicarDiagrama.html.twig', ['form' => $form->createView(), 'status' => 'success', 'stamp' => $fecha]);
+                }
+                catch (\Exception $e) {
+
+                }
+            }
+        }
+        return $this->render('@Gestion/trafico/replicarDiagrama.html.twig', ['form' => $form->createView()]);
+    }
+
+    private function getFormReplicarDiagrama()
+    {
+        $form = $this->createFormBuilder()
+                    ->add('origen', DateType::class, [
+                        'widget' => 'single_text',
+                    ])
+                    ->add('destino', DateType::class, [
+                        'widget' => 'single_text'
+                    ])
+                    ->add('diagramar', SubmitType::class, ['label' => 'Replicar Diagrama']) 
+                    ->setMethod('POST')     
+                    ->getForm();
+        return $form;
+    }
+
+    /**
+     * @Route("/diagramacion/detail", name="detalle_diagrama_servicios", methods={"POST", "GET"})
+     */
+    public function detalleDiagramaDiarioAction(Request $request)
+    {
+        $fecha = $request->request->get('fecha');
+        $em = $this->getDoctrine()->getManager();
+        $ordenes = $em->getRepository(OrdenServicio::class)->getOrdenesServicioEmpresa($this->getUser()->getEmpresa(), $fecha);
+        return $this->render('@Gestion/trafico/verDiagramaServicios.html.twig', ['fecha' => $fecha, 'ordenes' => $ordenes, 'onlyTable' => true]);
+
     }
 
 }

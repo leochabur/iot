@@ -1,22 +1,26 @@
-{% extends '@App/base.html.twig' %}
+{% extends onlyTable is not defined ? '@App/base.html.twig' : '@Gestion/emptyTemplate.html.twig' %}
 
 {% block content %}
-	<div class="h5 mt-5 mb-3">Ver Diagrama Servicios</div>
-    {{ form_start(form, {'attr' : {'novalidate' : 'novalidate', 'class' : 'border border-light'}}) }}
-	    <div class='form-row ml-4 mr-2 mt-2'>	 
-	    	<div class=' col-lg-4 col-sm-12'>
-			    {{ form_label(form.fecha) }}
-			    {{ form_widget(form.fecha, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
-			    {{ form_errors(form.fecha) }}
+	{{ parent() }}
+	{% if not onlyTable is defined %}
+		<div class="h5 mt-5 mb-3">Ver Diagrama Servicios</div>
+	    {{ form_start(form, {'attr' : {'novalidate' : 'novalidate', 'class' : 'border border-light'}}) }}
+		    <div class='form-row ml-4 mr-2 mt-2'>	 
+		    	<div class=' col-lg-4 col-sm-12'>
+				    {{ form_label(form.fecha) }}
+				    {{ form_widget(form.fecha, { 'attr' : {'class' : 'form-control form-control-sm text-uppercase'}}) }}
+				    {{ form_errors(form.fecha) }}
+				</div>
 			</div>
-		</div>
-		<div class='form-row ml-4 mr-2 mt-2 align-right'>
-			{{ form_widget(form.diagramar, { 'attr' : {'class' : 'btn btn-sm btn-default'}}) }}
-		</div>
-    {{ form_end(form) }}
+			<div class='form-row ml-4 mr-2 mt-2 align-right'>
+				{{ form_widget(form.diagramar, { 'attr' : {'class' : 'btn btn-sm btn-default'}}) }}
+			</div>
+	    {{ form_end(form) }}
 
-    <hr>
-    {% include '@Gestion/messages.html.twig'  %}
+	    <hr>
+	    {% include '@Gestion/messages.html.twig'  %}
+	{% endif %}
+
     {% if ordenes is defined %}
 	    <div class="h5 mt-2 mb-3">Servicios diagramados para el : {{ fecha|date('d/m/Y') }}</div>
 		<table class="table table-hover table-bordered table-striped table-sm mt-2">
@@ -28,7 +32,9 @@
 		      <th scope="col">Hora Salida</th>
 		      <th scope="col">Hora Llegada</th>
 		       <th scope="col">Unidad</th>
-		      <th scope="col"></th>
+		       {% if not onlyTable is defined%}
+		      		<th scope="col"></th>
+		       {% endif %}
 		    </tr>
 		  </thead>
 		  <tbody>
@@ -40,19 +46,14 @@
 		  			<td>{{ o.salida|date('d/m/Y - H:i') }}</td>
 		  			<td>{{ o.llegada|date('d/m/Y - H:i') }}</td>
 		  			<td class="text-right">{{ o.unidad }}</td>
-		  			<td class="text-center"><a href="{{ path('modificar_orden', { id : o.id }) }}" class="btn btn-sm btn-default">Editar</a></td>
+		  			{% if not onlyTable is defined%}
+		  				<td class="text-center"><a href="{{ path('modificar_orden', { id : o.id }) }}" class="btn btn-sm btn-default">Editar</a></td>
+		  			{% endif %}
 		  		</tr>
 		  	{% endfor %}
 		  </tbody>
 		</table>
 	{% endif %}
-{% endblock %}
 
-{% block javascripts %}
-
-<script type="text/javascript">
-
-
-</script>
 {% endblock %}
 

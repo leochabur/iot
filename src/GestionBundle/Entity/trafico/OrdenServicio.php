@@ -82,6 +82,49 @@ class OrdenServicio
      */
     private $informadas;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="finalizada", type="boolean", options={"default": false})
+     */
+    private $finalizada = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Usuario")
+     * @ORM\JoinColumn(name="id_usuario_alta", referencedColumnName="id", nullable=true)
+     */
+    private $userAlta;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Usuario")
+     * @ORM\JoinColumn(name="id_usuario_baja", referencedColumnName="id", nullable=true)
+     */
+    private $userBaja;
+
+    /**
+     *
+     * @ORM\Column(name="stampAlta", type="integer", nullable=true)
+     */
+    private $stampAlta;
+
+    /**
+     *
+     * @ORM\Column(name="stampBaja", type="integer", nullable=true)
+     */
+    private $stampBaja;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Empresa")
+     * @ORM\JoinColumn(name="id_empresa", referencedColumnName="id")
+     */
+    private $empresa;
+
+
+    public function updateCreate()
+    {
+        $fecha = new \DateTime();
+        $this->stampAlta = $fecha->getTimestamp();
+    }
 
     public function getUltimaComunicacion()
     {
@@ -327,8 +370,9 @@ class OrdenServicio
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct(\AppBundle\Entity\Empresa $empresa)
     {
+        $this->empresa = $empresa;
         $this->informadas = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -364,5 +408,149 @@ class OrdenServicio
     public function getInformadas()
     {
         return $this->informadas;
+    }
+
+    /**
+     * Set finalizada
+     *
+     * @param boolean $finalizada
+     *
+     * @return OrdenServicio
+     */
+    public function setFinalizada($finalizada)
+    {
+        $this->finalizada = $finalizada;
+
+        return $this;
+    }
+
+    /**
+     * Get finalizada
+     *
+     * @return boolean
+     */
+    public function getFinalizada()
+    {
+        return $this->finalizada;
+    }
+
+    /**
+     * Set stampAlta
+     *
+     * @param integer $stampAlta
+     *
+     * @return OrdenServicio
+     */
+    public function setStampAlta($stampAlta)
+    {
+        $this->stampAlta = $stampAlta;
+
+        return $this;
+    }
+
+    /**
+     * Get stampAlta
+     *
+     * @return integer
+     */
+    public function getStampAlta()
+    {
+        return $this->stampAlta;
+    }
+
+    /**
+     * Set userAlta
+     *
+     * @param \AppBundle\Entity\Usuario $userAlta
+     *
+     * @return OrdenServicio
+     */
+    public function setUserAlta(\AppBundle\Entity\Usuario $userAlta = null)
+    {
+        $this->userAlta = $userAlta;
+
+        return $this;
+    }
+
+    /**
+     * Get userAlta
+     *
+     * @return \AppBundle\Entity\Usuario
+     */
+    public function getUserAlta()
+    {
+        return $this->userAlta;
+    }
+
+    /**
+     * Set empresa
+     *
+     * @param \AppBundle\Entity\Empresa $empresa
+     *
+     * @return OrdenServicio
+     */
+    public function setEmpresa(\AppBundle\Entity\Empresa $empresa = null)
+    {
+        $this->empresa = $empresa;
+
+        return $this;
+    }
+
+    /**
+     * Get empresa
+     *
+     * @return \AppBundle\Entity\Empresa
+     */
+    public function getEmpresa()
+    {
+        return $this->empresa;
+    }
+
+    /**
+     * Set stampBaja
+     *
+     * @param integer $stampBaja
+     *
+     * @return OrdenServicio
+     */
+    public function setStampBaja($stampBaja)
+    {
+        $this->stampBaja = $stampBaja;
+
+        return $this;
+    }
+
+    /**
+     * Get stampBaja
+     *
+     * @return integer
+     */
+    public function getStampBaja()
+    {
+        return $this->stampBaja;
+    }
+
+    /**
+     * Set userBaja
+     *
+     * @param \AppBundle\Entity\Usuario $userBaja
+     *
+     * @return OrdenServicio
+     */
+    public function setUserBaja(\AppBundle\Entity\Usuario $userBaja = null)
+    {
+        $this->userBaja = $userBaja;
+
+        return $this;
+    }
+
+    /**
+     * Get userBaja
+     *
+     * @return \AppBundle\Entity\Usuario
+     */
+    public function getUserBaja()
+    {
+        return $this->userBaja;
     }
 }

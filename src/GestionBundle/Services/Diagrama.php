@@ -4,8 +4,8 @@ use GestionBundle\Entity\trafico\OrdenServicio;
  
 class Diagrama {
  
-    public function diagramarOrdenServicio(\GestionBundle\Entity\trafico\Turno $turno, $fecha ){
-        $orden = new OrdenServicio();
+    public function diagramarOrdenServicio(\GestionBundle\Entity\trafico\Turno $turno, \DateTime $fecha, \AppBundle\Entity\Empresa $empresa){
+        $orden = new OrdenServicio($empresa);
         $orden->setFecha($fecha);
         $salida = \DateTime::createFromFormat('Y-m-dH:i:s', $fecha->format('Y-m-d').$turno->getHoraInicial()->format('H:i:s'));
         $llegada = clone $salida;
