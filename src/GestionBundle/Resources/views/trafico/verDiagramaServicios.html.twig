@@ -47,7 +47,11 @@
 		  			<td>{{ o.llegada|date('d/m/Y - H:i') }}</td>
 		  			<td class="text-right">{{ o.unidad }}</td>
 		  			{% if not onlyTable is defined%}
-		  				<td class="text-center"><a href="{{ path('modificar_orden', { id : o.id }) }}" class="btn btn-sm btn-default">Editar</a></td>
+		  				<td class="text-center">		  					
+		  					<a href="{{ path('modificar_orden', { id : o.id }) }}" title="Modificar"><i class="far fa-edit"></i></a>
+		  					<a href="{{ path('eliminar_orden_servicio', { id : o.id })}}"title="Eliminar"><i class="far fa-trash-alt"></i></a>
+		  					<a title="Confirmar"><i class="far fa-check-square"></i></a>
+		  				</td>
 		  			{% endif %}
 		  		</tr>
 		  	{% endfor %}

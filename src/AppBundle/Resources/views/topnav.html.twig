@@ -32,6 +32,11 @@
         {% endif  %}
         {% if is_granted('ROLE_RESPONSABLE_DIAGRAMACION') %}
             <li class="nav-item dropdown">
+              <a class="nav-link active btn btn-sm" href="{{ path('homepage') }}" id="navbarDropdownMenuLink" aria-haspopup="true" aria-expanded="false">
+                Home
+              </a>
+            </li>
+            <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle active btn btn-sm" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Servicios
               </a>

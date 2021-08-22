@@ -91,6 +91,12 @@ class Empresa
     private $url;
 
     /**
+     * @ORM\Column(name="urlDelete", type="string", nullable=true)
+     * @Assert\NotBlank(message="El campo no puede permanecer en blanco")
+     */
+    private $urlDelete;
+
+    /**
      * @ORM\OneToMany(targetEntity="Usuario", mappedBy="empresa")
      */
     private $usuarios;
@@ -349,5 +355,46 @@ class Empresa
     public function getUrl()
     {
         return $this->url;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->usuarios = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add usuario
+     *
+     * @param \AppBundle\Entity\Usuario $usuario
+     *
+     * @return Empresa
+     */
+    public function addUsuario(\AppBundle\Entity\Usuario $usuario)
+    {
+        $this->usuarios[] = $usuario;
+
+        return $this;
+    }
+
+    /**
+     * Remove usuario
+     *
+     * @param \AppBundle\Entity\Usuario $usuario
+     */
+    public function removeUsuario(\AppBundle\Entity\Usuario $usuario)
+    {
+        $this->usuarios->removeElement($usuario);
+    }
+
+    /**
+     * Get usuarios
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUsuarios()
+    {
+        return $this->usuarios;
     }
 }

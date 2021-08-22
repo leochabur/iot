@@ -407,4 +407,92 @@ class DiagramacionController extends Controller
 
     }
 
+    private function comunicateDelete($id)
+    {
+        try
+        {
+          $path = $this->getUser()->getEmpresa()->getUrlDelete();
+
+          $curl = curl_init();
+          curl_setopt_array($curl, array(
+            CURLOPT_URL => $path.$id,
+            CURLOPT_CUSTOMREQUEST => "DELETE",
+            CURLOPT_RETURNTRANSFER => 1, 
+            CURLOPT_HTTPHEADER => array(
+              "Authorization: Bearer d8Ypl7DMuQsHjjW/INIHxRXjiV1BSezxrmbTV8EWZvk=",
+              "Content-Type: text/plain"
+            ),
+          ));
+          $response = curl_exec($curl);
+          $json = json_decode($response, true);
+          if (isset($json['success']))
+          {
+              $result = 1;
+              $message="";
+          }
+          else
+          {
+              $result = 0;
+              $message = $response;
+          }
+          curl_close($curl);    
+          return ['status' => $result, 'message' => $message];
+        }
+        catch (\Exception $e)
+        {
+            return ['status' => false, 'message' => $e->getMessage];
+        }
+    }
+
+    /**
+     * @Route("/diagramacion/deleteorder/{id}", name="eliminar_orden_servicio")
+     */
+    public function eliminarOrdenServiciosAction($id)
+    {
+        $repository = $this->getDoctrine()->getManager()->getRepository(OrdenServicio::class);
+        try
+        {
+            $em = $this->getDoctrine()->getManager();
+            $repository = $em->getRepository(OrdenServicio::class);
+
+            $orden = $repository->getOrdenServicioEmpresa($this->getUser()->getEmpresa(), $id);
+            if ($orden) //existe la orden
+            {
+                $result = $this->comunicateDelete($id);
+
+                if ($orden->getActiva()) //si esta ya eliminada no la vuelve a eliminar, solo la comunica
+                {
+                    if ($result['status'])
+                    {
+                        $orden->setActiva(false);
+                        $orden->setUserBaja($this->getUser());
+                        
+                        $fecha = new \DateTime();
+                        $fecha = $fecha->getTimestamp();
+                        $orden->getStampBaja($fecha);
+                    }
+                    else
+                    {
+                        return new JsonResponse(['status' => false, 'message' => 'No se ha podido comunicar la orden, la misma no se puede eliminar']);
+                    }
+                }
+
+                $oi = new OrdenInformada();
+                $oi->setFecha(new \DateTime());
+                $oi->setRequest("Numero de orden : $id");
+                $oi->setRespuestaJson($result['message']);
+                $oi->setStatus($result['status']);
+                $oi->setMensajeRespuesta($result['message']);
+                $oi->setOrden($orden);              
+                $em->persist($oi);
+                $em->flush();
+                return new JsonResponse(['status' => $result['status'], 'message' => $result['message']]);
+            }
+
+        }
+        catch (\Exception $e) {
+                                return new JsonResponse(['status' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
 }

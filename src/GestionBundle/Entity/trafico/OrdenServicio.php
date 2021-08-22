@@ -137,17 +137,17 @@ class OrdenServicio
                    'idOrden' =>  $this->id,
                    'idCronograma' => $this->getTurno()->getServicio()->getId(),
                    'Cronograma' => $this->getTurno()->getServicio()->getNombre(),
-                    'idCliente' => $this->getTurno()->getServicio()->getCliente()->getId(),
-                    'Cliente' => $this->getTurno()->getServicio()->getCliente().'',
-                    'Origen' => $this->getTurno()->getServicio()->getOrigen().'',
-                    'Destino' => $this->getTurno()->getServicio()->getDestino().'',
-                    'Fecha_Servicio' => $this->fecha->format('Y-m-d'),
-                    'interno' => $this->getUnidad()->getInterno(),
-                    'Horario_Cabecera' => $this->salida->format('H:i:s'),
-                    'Horario_Llegada' => $this->salida->format('H:i:s'),
-                    'type' => $this->turno->getTipo(),
-                    'direction' => $this->turno->getServicio()->getSentido()->getCodigo()
-                     );
+                   'idCliente' => $this->getTurno()->getServicio()->getCliente()->getId(),
+                   'Cliente' => $this->getTurno()->getServicio()->getCliente().'',
+                   'Origen' => $this->getTurno()->getServicio()->getOrigen().'',
+                   'Destino' => $this->getTurno()->getServicio()->getDestino().'',
+                   'Fecha_Servicio' => $this->fecha->format('Y-m-d'),
+                   'interno' => $this->getUnidad()->getInterno(),
+                   'Horario_Cabecera' => $this->salida->format('H:i:s'),
+                   'Horario_Llegada' => $this->salida->format('H:i:s'),
+                   'type' => $this->turno->getTipo(),
+                   'direction' => $this->turno->getServicio()->getSentido()->getCodigo()
+                  );
     }
 
     /**

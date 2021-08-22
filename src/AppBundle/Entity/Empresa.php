@@ -91,6 +91,12 @@ class Empresa
     private $url;
 
     /**
+     * @ORM\Column(name="urlDelete", type="string", nullable=true)
+     * @Assert\NotBlank(message="El campo no puede permanecer en blanco")
+     */
+    private $urlDelete;
+
+    /**
      * @ORM\OneToMany(targetEntity="Usuario", mappedBy="empresa")
      */
     private $usuarios;
@@ -390,5 +396,29 @@ class Empresa
     public function getUsuarios()
     {
         return $this->usuarios;
+    }
+
+    /**
+     * Set urlDelete
+     *
+     * @param string $urlDelete
+     *
+     * @return Empresa
+     */
+    public function setUrlDelete($urlDelete)
+    {
+        $this->urlDelete = $urlDelete;
+
+        return $this;
+    }
+
+    /**
+     * Get urlDelete
+     *
+     * @return string
+     */
+    public function getUrlDelete()
+    {
+        return $this->urlDelete;
     }
 }
